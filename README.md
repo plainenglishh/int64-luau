@@ -13,9 +13,9 @@ If you have a bitwise operation you'd like to contribute though, or an optimizat
 
 ## Performance
 
-This module is as fast as is reasonably possible, however it is a LOT slower than native. Most notably, division is several orders of magnitude faster because it is implemented as long-division. Specialization is possible to improve the performance but for over half of all numbers it will still be incredibly slow. Implementing divison as something that is *not* long divison is not off the table, but it's quite complex and it's unclear whether it'd be a huge benefit or not.
+This module is as fast as is reasonably possible, however it is a LOT slower than native. Most notably, division is quite a bit slower because it is implemented as a form of long-division. Specialization is possible to improve the performance it will still be incredibly slow. Implementing it in a more efficient manner is not off the table, but it would increase complexity dramatically for unknown benefit.
 
-The other arithmetic operations and the bitwise operations are implemented in a much more efficient manner. They are still an order of magnitude slower than Luau's normal operations but they are not prohibitively slow like division is.
+Despite this note though, all of the operations are reasonably fast. Outside of division, the remaining arithmetic and bitwise operations are quite fast and completely usable.
 
 ## API
 

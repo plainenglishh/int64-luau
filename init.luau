@@ -314,6 +314,13 @@ local function gt(lhs: vector, rhs: vector): boolean
 end
 
 --[=[
+	Returns whether `lhs` is greater than or equal to `rhs`.
+]=]
+local function gt_equal(lhs: vector, rhs: vector): boolean
+	return lhs == rhs or gt(lhs, rhs)
+end
+
+--[=[
 	Returns whether `lhs` is less than `rhs`.
 ]=]
 local function lt(lhs: vector, rhs: vector): boolean
@@ -325,6 +332,13 @@ local function lt(lhs: vector, rhs: vector): boolean
 	else
 		return l_most < r_most
 	end
+end
+
+--[=[
+	Returns whether `lhs` is less than or equal to `rhs`.
+]=]
+local function lt_equal(lhs: vector, rhs: vector): boolean
+	return lhs == rhs or lt(lhs, rhs)
 end
 
 --[=[
@@ -432,17 +446,12 @@ local function mult(lhs: vector, rhs: vector): vector
 end
 
 --[=[
-	Calculates both the quotient and the remainder of divison between the two
-	provided values. Equivalent to `//` and `%` for normal integers. 
+	Calculates the product of the two provided values. Equivalent to `//` for
+	normal integers. 
 	
 	This function will error if `rhs` is 0.
 ]=]
-function div(lhs: vector, rhs: vector): (vector, vector)
-	-- Based on long divison algorithm from here:
-	-- https://en.wikipedia.org/w/index.php?title=Division_algorithm&oldid=1246386441#Integer_division_(unsigned)_with_remainder
-	--
-	-- I imagine this could be implemented more efficiently but I don't have
-	-- the brainpower to do it.
+local function div(lhs: vector, rhs: vector): vector
 	if is_zero(rhs) then
 		error("cannot divide integers by zero", 2)
 	elseif countlz(lhs) >= 11 and countlz(rhs) >= 11 then
@@ -452,29 +461,24 @@ function div(lhs: vector, rhs: vector): (vector, vector)
 	end
 
 	local quotient = ZERO_VECTOR
-	local remainder = ZERO_VECTOR
+	local divisor = rhs
+	local power = 0
+	while lt_equal(divisor, lhs) do
+		divisor = lshift(divisor, 1)
+		power += 1
+	end
 
-	local l_most, l_least = u32_from_u64(lhs)
+	while power > 0 do
+		divisor = rshift(divisor, 1)
+		power -= 1
 
-	for i = 63, 0, -1 do
-		local re_most, re_least = u32_from_u64(lshift(remainder, 1))
-
-		if i > 31 then
-			re_least = bit32.bor(re_least, bit32.extract(l_most, i - 32, 1))
-		else
-			re_least = bit32.bor(re_least, bit32.extract(l_least, i, 1))
-		end
-		-- I'm gonna be honest: I don't know why this works. It's out of
-		-- desperation that it exists. It is scary.
-		remainder = u64_from_pair(re_least, re_most)
-
-		if not lt(remainder, rhs) then
-			remainder = sub(remainder, rhs)
-			quotient = bor(quotient, lshift(ONE_VECTOR, i))
+		if lt_equal(divisor, lhs) then
+			lhs = sub(lhs, divisor)
+			quotient = bor(quotient, lshift(ONE_VECTOR, power))
 		end
 	end
 
-	return quotient, remainder
+	return quotient
 end
 
 -- TODO: replace and extract
@@ -519,5 +523,7 @@ return {
 	div = div,
 
 	lt = lt,
+	lt_equal = lt_equal,
 	gt = gt,
+	gt_equal = gt_equal,
 }
