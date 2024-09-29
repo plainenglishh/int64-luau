@@ -1,0 +1,7 @@
+globals:
+  vector:
+    args:
+      - type: number
+      - type: number
+      - type: number
+    must_use: true
