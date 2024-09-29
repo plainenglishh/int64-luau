@@ -60,6 +60,11 @@ local function u16_from_u64(u64: vector): (number, number, number, number)
 	return bit32.rshift(most, 16), bit32.band(most, 0xFFFF), bit32.rshift(least, 16), bit32.band(least, 0xFFFF)
 end
 
+local function f64_from_u64(u64: vector): number
+	local most, least = u32_from_u64(u64)
+	return most * 2 ^ 32 + least
+end
+
 local function to_bytes_buffer(u64: vector): buffer
 	local most, least = u32_from_u64(u64)
 	local buf = buffer.create(8)
@@ -440,6 +445,10 @@ function div(lhs: vector, rhs: vector): (vector, vector)
 	-- the brainpower to do it.
 	if is_zero(rhs) then
 		error("cannot divide integers by zero", 2)
+	elseif countlz(lhs) >= 11 and countlz(rhs) >= 11 then
+		local l_real = f64_from_u64(lhs)
+		local r_real = f64_from_u64(rhs)
+		return u64_from_f64(l_real / r_real), u64_from_f64(math.fmod(l_real, r_real))
 	end
 
 	local quotient = ZERO_VECTOR
