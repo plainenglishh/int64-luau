@@ -1,6 +1,3 @@
 {
-    "globals": [
-        "vector"
-    ],
     "languageMode": "strict"
 }
