@@ -29,6 +29,12 @@ local function u64_from_f64(f64: number): vector
 	return u64_from_pair(bit32.bor(f64 // 2 ^ 32), bit32.bor(f64 % 2 ^ 32))
 end
 
+--[=[
+	Reads a `u64` from the provided buffer. If offset is provided, reads from
+	that spot in the buffer. Otherwise, reads from the beginning.
+
+	This function reads a little-endian value from the buffer.
+]=]
 local function u64_from_buffer(buf: buffer, offset: number?): vector
 	offset = offset or 0
 	local least = buffer.readu32(buf, offset :: number)
@@ -37,6 +43,12 @@ local function u64_from_buffer(buf: buffer, offset: number?): vector
 	return u64_from_pair(most, least)
 end
 
+--[=[
+	Reads a `u64` from the provided string. If offset is provided, reads from
+	that point in the string. Otherwise starts at the beginning.
+
+	This function reads a little-endian value from the string.
+]=]
 local function u64_from_string(str: string, offset: number?): vector
 	offset = offset or 1
 	-- This is deliberately backwards because we expect a little endian input
@@ -88,8 +100,9 @@ end
 
 local function to_bytes_string(u64: vector): string
 	local most, least = u32_from_u64(u64)
-	return string.format(
-		"%c%c%c%c%c%c%c%c",
+	-- Previous implementation of this used `%c` but it turns out that
+	-- `string.format("%c", 0)` results in a zero length string!
+	return string.char(
 		bit32.band(least, 0xFF),
 		bit32.extract(least, 8, 8),
 		bit32.extract(least, 16, 8),
