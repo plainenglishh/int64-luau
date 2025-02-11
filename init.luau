@@ -198,7 +198,11 @@ end
 	Computes the bitwise negation of the provided value.
 ]=]
 local function bnot(u64: vector): vector
-	return vector.create(bit32.bnot(u64.x), bit32.bnot(u64.y), bit32.bnot(u64.z))
+	return vector.create(
+		bit32.band(bit32.bnot(u64.x), 0b1111_1111_1111_1111_1111_11),
+		bit32.band(bit32.bnot(u64.y), 0b1111_1111_1111_1111_1111),
+		bit32.band(bit32.bnot(u64.z), 0b1111_1111_1111_1111_1111_11)
+	)
 end
 
 --[=[
@@ -329,7 +333,7 @@ end
 	reasons.
 ]=]
 local function btest(lhs: vector, rhs: vector): boolean
-	return is_zero(band(lhs, rhs))
+	return band(lhs, rhs) ~= ZERO
 end
 
 --[=[
@@ -448,7 +452,7 @@ local function mult(lhs: vector, rhs: vector): vector
 	-- (A + B) * (C + D) = (A * C) + (A * D) + (B * C) + (B * D)
 	--
 	-- However, multiplying two 32-bit numbers might overflow. So, we need to
-	-- use 16-bit numbers. This turns out math into this:
+	-- use 16-bit numbers. This turns our math into this:
 	-- (A + B + C + D) * (E + F + G + H) =
 	-- 		(A * E) + (A * F) + (A * G) + (A * H) +
 	-- 		(B * E) + (B * F) + (B * G) + (B * H) +
