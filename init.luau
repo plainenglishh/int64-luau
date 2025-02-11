@@ -9,6 +9,15 @@ local HEX_TO_BINARY = {
     ["c"] = "1100", ["d"] = "1101", ["e"] = "1110", ["f"] = "1111",
 }
 
+local ZERO = vector.create(0, 0, 0)
+local ONE = vector.create(0, 0, 1)
+local TWO = vector.create(0, 0, 2)
+
+local MAX = vector.create(0x3fffff, 0xfffff, 0x3fffff)
+local MAX_U32 = vector.create(0, 0x3ff, 0x3fffff)
+local MAX_F64 = vector.create(0x7ff, 0xfffff, 0x3fffff)
+local MAX_F32 = vector.create(0, 1, 0x3fffff)
+
 local function u64_from_pair(most: number, least: number): vector
 	-- 32 - 22 = 10
 	-- x = upper 22 of most
@@ -114,9 +123,6 @@ local function to_bytes_string(u64: vector): string
 	)
 end
 
-local ZERO_VECTOR = vector.create(0, 0, 0)
-local ONE_VECTOR = vector.create(0, 0, 1)
-
 --[=[
 	Converts the provided `u64` to a string of 16 hexadecimal digits.
 	The returned string will always be 16 bytes and the number is formatted as
@@ -143,7 +149,7 @@ end
 	Equivalent to `u64 == from_u32(0)`.
 ]=]
 local function is_zero(u64: vector): boolean
-	return u64 == ZERO_VECTOR
+	return u64 == ZERO
 end
 
 --[=[
@@ -492,7 +498,7 @@ local function div(lhs: vector, rhs: vector): vector
 		return u64_from_f64(l_real / r_real) -- , u64_from_f64(math.fmod(l_real, r_real))
 	end
 
-	local quotient = ZERO_VECTOR
+	local quotient = ZERO
 	local remainder = lhs
 
 	-- Doing extra iterations of this is very bad!
@@ -501,7 +507,7 @@ local function div(lhs: vector, rhs: vector): vector
 
 		if gt_equal(remainder, shifted_divisor) then
 			remainder = sub(remainder, shifted_divisor)
-			quotient = bor(quotient, lshift(ONE_VECTOR, i))
+			quotient = bor(quotient, lshift(ONE, i))
 		end
 	end
 
@@ -515,7 +521,7 @@ end
 	This function will error if `rhs` is 0.
 ]=]
 local function mod(lhs: vector, rhs: vector): vector
-	if rhs == ZERO_VECTOR then
+	if rhs == ZERO then
 		error("cannot divide integers by 0")
 	end
 
@@ -533,15 +539,15 @@ end
 ]=]
 local function pow(base: vector, power: number): vector
 	if power == 0 then
-		return ONE_VECTOR
-	elseif band(base, sub(base, ONE_VECTOR)) == ZERO_VECTOR then
-		return lshift(ONE_VECTOR, countrz(base) * power)
+		return ONE
+	elseif band(base, sub(base, ONE)) == ZERO then
+		return lshift(ONE, countrz(base) * power)
 	end
 
 	local power_vec = u64_from_u32(power)
-	local result = ONE_VECTOR
+	local result = ONE
 	for i = 64, 1, -1 do
-		if not btest(power_vec, ONE_VECTOR) then
+		if not btest(power_vec, ONE) then
 			result = mult(result, base)
 		end
 		base = mult(base, base)
@@ -579,10 +585,24 @@ print(to_hex_string(d))
 -- TODO: replace and extract
 -- TODO: to_decimal_string
 -- TODO: vararg versions of band, bor, bxor
--- TODO: constants
 -- TODO: normalize
 
 return {
+	--- The number `0`.
+	ZERO = ZERO,
+	--- The number `1`.
+	ONE = ONE,
+	--- The number `2`.
+	TWO = TWO,
+	--- The maximum value of a `u64` (2 ^ 64 - 1).
+	MAX = MAX,
+	--- The maximum value of a `u32` (2 ^ 32 - 1).
+	MAX_U32 = MAX_U32,
+	--- The maximum supported integer value for an `f64` (2 ^ 53 - 1).
+	MAX_F64 = MAX_F64,
+	--- The maximum supported integer value for an `f32` (2 ^ 23 - 1).
+	MAX_F32 = MAX_F32,
+
 	from_pair = u64_from_pair,
 	from_u32 = u64_from_u32,
 	from_f64 = u64_from_f64,
@@ -597,6 +617,11 @@ return {
 	to_buffer = to_bytes_buffer,
 	to_hex_string = to_hex_string,
 	to_bin_string = to_bin_string,
+
+	lt = lt,
+	lt_equal = lt_equal,
+	gt = gt,
+	gt_equal = gt_equal,
 
 	band = band,
 	bor = bor,
@@ -620,9 +645,4 @@ return {
 	div = div,
 	mod = mod,
 	pow = pow,
-
-	lt = lt,
-	lt_equal = lt_equal,
-	gt = gt,
-	gt_equal = gt_equal,
 }
