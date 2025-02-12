@@ -31,6 +31,24 @@ for i = 1, 64, 4 do
 		`0xcccccccccccccccc LROT {i + 3} was wrong`
 	)
 end
+for i = -64, 0, 4 do
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_1, i)) == "cccccccccccccccc",
+		`0xcccccccccccccccc LROT {i} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 1)) == "9999999999999999",
+		`0xcccccccccccccccc LROT {i + 1} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 2)) == "3333333333333333",
+		`0xcccccccccccccccc LROT {i + 2} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 3)) == "6666666666666666",
+		`0xcccccccccccccccc LROT {i + 3} was wrong`
+	)
+end
 
 local lrotate_2 = bit64.from_pair(0x33333333, 0x33333333)
 assert(bit64.lrotate(lrotate_2, 0) == lrotate_2, "0x3333333333333333 LROT 0 was wrong")
@@ -50,6 +68,24 @@ for i = 1, 64, 4 do
 	)
 	assert(
 		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 3)) == "3333333333333333",
+		`0x3333333333333333 LROT {i + 3} was wrong`
+	)
+end
+for i = -64, 0, 4 do
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_2, i)) == "3333333333333333",
+		`0x3333333333333333 LROT {i} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 1)) == "6666666666666666",
+		`0x3333333333333333 LROT {i + 1} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 2)) == "cccccccccccccccc",
+		`0x3333333333333333 LROT {i + 2} was wrong`
+	)
+	assert(
+		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 3)) == "9999999999999999",
 		`0x3333333333333333 LROT {i + 3} was wrong`
 	)
 end
@@ -121,14 +157,5 @@ assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 61)) == "dbd5b7ddeef81ffd", 
 assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 62)) == "b7ab6fbbddf03ffb", "0xdeadbeef77c0ffee LROT 62 was wrong")
 assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 63)) == "6f56df77bbe07ff7", "0xdeadbeef77c0ffee LROT 63 was wrong")
 assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee LROT 64 was wrong")
-
-for i = -64, -1 do
-	local shifted = pcall(bit64.lrotate, bit64.ONE, i)
-	assert(not shifted, "lrotate allowed negative arguments when it shouldn't")
-end
-for i = 65, 128 do
-	local shifted = pcall(bit64.lrotate, bit64.ONE, i)
-	assert(not shifted, "lrotate allowed greater than 64 arguments when it shouldn't")
-end
 
 return {}

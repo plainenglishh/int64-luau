@@ -158,9 +158,10 @@ for i = -64, -1 do
 	local shifted = pcall(bit64.rshift, bit64.ONE, i)
 	assert(not shifted, "rshift allowed negative arguments when it shouldn't")
 end
+
 for i = 65, 128 do
-	local shifted = pcall(bit64.rshift, bit64.ONE, i)
-	assert(not shifted, "rshift allowed greater than 64 arguments when it shouldn't")
+	local shifted = bit64.rshift(bit64.MAX, i)
+	assert(shifted == vector.zero, "rshift did not work for values greater than 64")
 end
 
 return {}
