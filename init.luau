@@ -18,6 +18,12 @@ local MAX_U32 = vector.create(0, 0x3ff, 0x3fffff)
 local MAX_F64 = vector.create(0x7ff, 0xfffff, 0x3fffff)
 local MAX_F32 = vector.create(0, 1, 0x3fffff)
 
+--[=[
+	Constructs a 64-bit integer from the passed `u32` values.
+	
+	The provided `most` value fills the upper 32 bits of the integer,
+	and the provided `least` value fills the lower 32-bits.
+]=]
 local function from_pair(most: number, least: number): vector
 	-- 32 - 22 = 10
 	-- x = upper 22 of most
@@ -30,10 +36,22 @@ local function from_pair(most: number, least: number): vector
 	)
 end
 
+--[=[
+	Constructs a 64-bit integer from the passed `u32`.
+	
+	This number is truncated in a 32-bit integer, even if it is larger than
+	the max value.
+]=]
 local function from_u32(u32: number): vector
 	return from_pair(0, u32) -- TODO: efficiency
 end
 
+--[=[
+	Constructs a 64-bit integer from the passed `f64`.
+
+	The number is truncated into an integer first. Note that Luau numbers
+	cannot accurately represent integers past 2 ^ 53.
+]=]
 local function from_f64(f64: number): vector
 	return from_pair(bit32.bor(f64 // 2 ^ 32), bit32.bor(f64 % 2 ^ 32))
 end
@@ -68,6 +86,11 @@ local function from_string(str: string, offset: number?): vector
 	return from_pair(most, least)
 end
 
+--[=[
+	Converts the provided `u64` into two 32-bit integers.
+
+	This returns the most significant portion of the number first.
+]=]
 local function to_pair(u64: vector): (number, number)
 	-- x = upper 22 of most
 	-- y = lower 10 of most and upper 10 of least
@@ -78,6 +101,11 @@ local function to_pair(u64: vector): (number, number)
 	return most, least
 end
 
+--[=[
+	Converts the provided `u64` into four 16-bit integers.
+
+	This returns the most significant portion of the number first.
+]=]
 local function to_quartet(u64: vector): (number, number, number, number)
 	-- 0000000000000000000000 00000000000000000000 0000000000000000000000
 	-- 0000000000000000 000000 0000000000 0000000000 000000 0000000000000000
@@ -92,11 +120,23 @@ local function to_quartet(u64: vector): (number, number, number, number)
 	return q1, q2, q3, q4
 end
 
+--[=[
+	Converts the provided `u64` to an `f64` (or put plainly: a normal Luau
+	number).
+
+	This function does not check for precision loss. f64 values lose precision
+	past 2 ^ 53.
+]=]
 local function to_f64(u64: vector): number
 	local most, least = to_pair(u64)
 	return most * 2 ^ 32 + least
 end
 
+--[=[
+	Converts the provided `u64` to a buffer.
+
+	The integer is written as a little-endian value.
+]=]
 local function to_buffer(u64: vector): buffer
 	local most, least = to_pair(u64)
 	local buf = buffer.create(8)
@@ -107,6 +147,11 @@ local function to_buffer(u64: vector): buffer
 	return buf
 end
 
+--[=[
+	Converts the provided `u64` to string of binary data.
+
+	The integer is written as if it were little-endian.
+]=]
 local function to_string(u64: vector): string
 	local most, least = to_pair(u64)
 	-- Previous implementation of this used `%c` but it turns out that
@@ -125,8 +170,9 @@ end
 
 --[=[
 	Converts the provided `u64` to a string of 16 hexadecimal digits.
+
 	The returned string will always be 16 bytes and the number is formatted as
-	if it were big-endian.
+	if it were big-endian. It also always uses lowercase letters.
 ]=]
 local function to_hex_string(u64: vector): string
 	local most, least = to_pair(u64)
@@ -135,6 +181,7 @@ end
 
 --[=[
 	Converts the provided `u64` to a string of 64 binary digits.
+
 	The returned string will always be 64 bytes and the number is formatted as
 	if it were big-endian.
 ]=]
@@ -239,7 +286,7 @@ end
 	numbers are unsigned, this effectively just copies the most significant
 	bit into the empty space rather than filling them with zeros.
 
-	This function will error if `n` is outside the range `[0, 64]`.
+	This function will error if `n` is negative.
 ]=]
 local function arshift(u64: vector, n: number): vector
 	-- If the sign bit is set, we do arshift
@@ -476,12 +523,13 @@ end
 	This function will error if `rhs` is 0.
 ]=]
 local function div(lhs: vector, rhs: vector): vector
+	-- TODO: Do we want to return the remainder?
 	if is_zero(rhs) then
 		error("cannot divide integers by zero")
 	elseif countlz(lhs) >= 11 and countlz(rhs) >= 11 then
 		local l_real = to_f64(lhs)
 		local r_real = to_f64(rhs)
-		return from_f64(l_real / r_real) -- , u64_from_f64(math.fmod(l_real, r_real))
+		return from_f64(l_real / r_real)
 	end
 
 	local quotient = ZERO
@@ -515,7 +563,7 @@ local function mod(lhs: vector, rhs: vector): vector
 end
 
 --[=[
-	Calculates the result of `base` raised to `power`. Equivalent to `%` for
+	Calculates the result of `base` raised to `power`. Equivalent to `^` for
 	normal integers. `power` is interpreted as a 32-bit integer.
 
 	If the result is greater than or equal to 2^64, the returned value will
@@ -562,7 +610,6 @@ print(to_hex_string(d))
 -- TODO: replace and extract
 -- TODO: to_decimal_string
 -- TODO: vararg versions of band, bor, bxor
--- TODO: normalize
 
 return {
 	--- The number `0`.
