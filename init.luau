@@ -553,7 +553,6 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
--- TODO: then bitwise ops
 -- TODO: verify error states on bitwise ops
 
 local n = u64_from_pair(0, 3)
@@ -620,6 +619,7 @@ return {
 	lt_equal = lt_equal,
 	gt = gt,
 	gt_equal = gt_equal,
+	is_zero = is_zero,
 
 	band = band,
 	bor = bor,

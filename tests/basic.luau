@@ -413,4 +413,39 @@ assert(gte_8, "gte_8 returned the wrong result")
 local gte_9 = bit64.gt_equal(bit64.from_pair(0, 0xdeadbeef), bit64.from_pair(0, 0xdeadbeef))
 assert(gte_9, "gte_9 returned the wrong result")
 
+assert(bit64.is_zero(bit64.ZERO), "is_zero was wrong for bit64.ZERO")
+assert(bit64.is_zero(vector.zero), "is_zero was wrong for zero vector")
+
+assert(not bit64.is_zero(bit64.ONE), "is_zero was wrong for bit64.ONE")
+assert(not bit64.is_zero(bit64.TWO), "is_zero was wrong for bit64.TWO")
+assert(not bit64.is_zero(bit64.MAX), "is_zero was wrong for bit64.MAX")
+assert(not bit64.is_zero(bit64.MAX_U32), "is_zero was wrong for bit64.MAX_U32")
+assert(not bit64.is_zero(bit64.MAX_F64), "is_zero was wrong for bit64.MAX_F64")
+assert(not bit64.is_zero(bit64.MAX_F32), "is_zero was wrong for bit64.MAX_F32")
+
+assert(bit64.is_zero(from_pair_1), "is_zero was wrong for from_pair_1")
+assert(not bit64.is_zero(from_pair_2), "is_zero was wrong for from_pair_2")
+assert(not bit64.is_zero(from_pair_3), "is_zero was wrong for from_pair_3")
+assert(not bit64.is_zero(from_pair_4), "is_zero was wrong for from_pair_4")
+assert(bit64.is_zero(from_pair_5), "is_zero was wrong for from_pair_5")
+
+assert(bit64.is_zero(from_u32_1), "is_zero was wrong for from_u32_1")
+assert(not bit64.is_zero(from_u32_2), "is_zero was wrong for from_u32_2")
+assert(not bit64.is_zero(from_u32_3), "is_zero was wrong for from_u32_3")
+assert(not bit64.is_zero(from_u32_4), "is_zero was wrong for from_u32_4")
+assert(bit64.is_zero(from_u32_5), "is_zero was wrong for from_u32_5")
+
+assert(bit64.is_zero(from_f64_1), "is_zero was wrong for from_f64_1")
+assert(not bit64.is_zero(from_f64_2), "is_zero was wrong for from_f64_2")
+assert(not bit64.is_zero(from_f64_3), "is_zero was wrong for from_f64_3")
+assert(not bit64.is_zero(from_f64_4), "is_zero was wrong for from_f64_4")
+assert(not bit64.is_zero(from_f64_5), "is_zero was wrong for from_f64_5")
+assert(not bit64.is_zero(from_f64_6), "is_zero was wrong for from_f64_6")
+assert(not bit64.is_zero(from_f64_7), "is_zero was wrong for from_f64_7")
+assert(not bit64.is_zero(from_f64_8), "is_zero was wrong for from_f64_8")
+
+assert(bit64.is_zero(from_string_1), "is_zero was wrong for from_string_1")
+assert(not bit64.is_zero(from_string_2), "is_zero was wrong for from_string_2")
+assert(not bit64.is_zero(from_string_3), "is_zero was wrong for from_string_3")
+
 return {}
