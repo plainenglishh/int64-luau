@@ -18,7 +18,7 @@ local MAX_U32 = vector.create(0, 0x3ff, 0x3fffff)
 local MAX_F64 = vector.create(0x7ff, 0xfffff, 0x3fffff)
 local MAX_F32 = vector.create(0, 1, 0x3fffff)
 
-local function u64_from_pair(most: number, least: number): vector
+local function from_pair(most: number, least: number): vector
 	-- 32 - 22 = 10
 	-- x = upper 22 of most
 	-- y = lower 10 of most and upper 10 of least
@@ -30,12 +30,12 @@ local function u64_from_pair(most: number, least: number): vector
 	)
 end
 
-local function u64_from_u32(u32: number): vector
-	return u64_from_pair(0, u32) -- TODO: efficiency
+local function from_u32(u32: number): vector
+	return from_pair(0, u32) -- TODO: efficiency
 end
 
-local function u64_from_f64(f64: number): vector
-	return u64_from_pair(bit32.bor(f64 // 2 ^ 32), bit32.bor(f64 % 2 ^ 32))
+local function from_f64(f64: number): vector
+	return from_pair(bit32.bor(f64 // 2 ^ 32), bit32.bor(f64 % 2 ^ 32))
 end
 
 --[=[
@@ -44,12 +44,12 @@ end
 
 	This function reads a little-endian value from the buffer.
 ]=]
-local function u64_from_buffer(buf: buffer, offset: number?): vector
+local function from_buffer(buf: buffer, offset: number?): vector
 	offset = offset or 0
 	local least = buffer.readu32(buf, offset :: number)
 	local most = buffer.readu32(buf, offset :: number + 4)
 
-	return u64_from_pair(most, least)
+	return from_pair(most, least)
 end
 
 --[=[
@@ -58,17 +58,17 @@ end
 
 	This function reads a little-endian value from the string.
 ]=]
-local function u64_from_string(str: string, offset: number?): vector
+local function from_string(str: string, offset: number?): vector
 	offset = offset or 1
 	-- This is deliberately backwards because we expect a little endian input
 	local d, c, b, a, h, g, f, e = string.byte(str, offset, offset :: number + 7)
 	local least = bit32.bor(bit32.lshift(bit32.replace(b, a, 8, 8), 16), bit32.replace(d, c, 8, 8))
 	local most = bit32.bor(bit32.lshift(bit32.replace(f, e, 8, 8), 16), bit32.replace(h, g, 8, 8))
 
-	return u64_from_pair(most, least)
+	return from_pair(most, least)
 end
 
-local function u32_from_u64(u64: vector): (number, number)
+local function to_pair(u64: vector): (number, number)
 	-- x = upper 22 of most
 	-- y = lower 10 of most and upper 10 of least
 	-- z = lower 22 of least
@@ -78,11 +78,11 @@ local function u32_from_u64(u64: vector): (number, number)
 	return most, least
 end
 
-local function u16_from_u64(u64: vector): (number, number, number, number)
+local function to_quartet(u64: vector): (number, number, number, number)
 	-- 0000000000000000000000 00000000000000000000 0000000000000000000000
 	-- 0000000000000000 000000 0000000000 0000000000 000000 0000000000000000
 	-- 1111000111100010 1101001111000100 1000000010011010 1011110011011110
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	local q1, q2 = bit32.rshift(most, 16), bit32.band(most, 0xffff)
 	local q3, q4 = bit32.rshift(least, 16), bit32.band(least, 0xffff)
 	-- local q1 = bit32.rshift(u64.x, 6)
@@ -93,12 +93,12 @@ local function u16_from_u64(u64: vector): (number, number, number, number)
 end
 
 local function to_f64(u64: vector): number
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	return most * 2 ^ 32 + least
 end
 
-local function to_bytes_buffer(u64: vector): buffer
-	local most, least = u32_from_u64(u64)
+local function to_buffer(u64: vector): buffer
+	local most, least = to_pair(u64)
 	local buf = buffer.create(8)
 	-- We use a little endian format because it doesn't matter and most
 	-- systems we run on are little endian so it'll be nicer for them.
@@ -107,8 +107,8 @@ local function to_bytes_buffer(u64: vector): buffer
 	return buf
 end
 
-local function to_bytes_string(u64: vector): string
-	local most, least = u32_from_u64(u64)
+local function to_string(u64: vector): string
+	local most, least = to_pair(u64)
 	-- Previous implementation of this used `%c` but it turns out that
 	-- `string.format("%c", 0)` results in a zero length string!
 	return string.char(
@@ -129,7 +129,7 @@ end
 	if it were big-endian.
 ]=]
 local function to_hex_string(u64: vector): string
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	return string.format("%08x%08x", most, least)
 end
 
@@ -204,14 +204,13 @@ local function lshift(u64: vector, n: number): vector
 	elseif n == 0 then
 		return u64
 	end
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	if n < 32 then
 		local remainder = 32 - n
-		local ret =
-			u64_from_pair(bit32.replace(bit32.rshift(least, remainder), most, n, remainder), bit32.lshift(least, n))
+		local ret = from_pair(bit32.replace(bit32.rshift(least, remainder), most, n, remainder), bit32.lshift(least, n))
 		return ret
 	else
-		local ret = u64_from_pair(bit32.lshift(least, n - 32), 0)
+		local ret = from_pair(bit32.lshift(least, n - 32), 0)
 		return ret
 	end
 end
@@ -225,12 +224,12 @@ local function rshift(u64: vector, n: number): vector
 	if n == 0 then
 		return u64
 	end
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	if n < 32 then
-		local ret = u64_from_pair(bit32.rshift(most, n), bit32.replace(bit32.rshift(least, n), most, 32 - n, n))
+		local ret = from_pair(bit32.rshift(most, n), bit32.replace(bit32.rshift(least, n), most, 32 - n, n))
 		return ret
 	else
-		local ret = u64_from_pair(0, bit32.rshift(most, n - 32))
+		local ret = from_pair(0, bit32.rshift(most, n - 32))
 		return ret
 	end
 end
@@ -287,7 +286,7 @@ end
 	from the left-most (most significant) bit.
 ]=]
 local function countlz(u64: vector): number
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	if most == 0 then
 		return bit32.countlz(least) + 32
 	else
@@ -300,7 +299,7 @@ end
 	from the right-most (least significant) bit.
 ]=]
 local function countrz(u64: vector): number
-	local most, least = u32_from_u64(u64)
+	local most, least = to_pair(u64)
 	if least == 0 then
 		return bit32.countrz(most) + 32
 	else
@@ -323,16 +322,16 @@ end
 	Returns the provided `u64` with the order of bytes swapped.
 ]=]
 local function byteswap(u64: vector): vector
-	local most, least = u32_from_u64(u64)
-	return u64_from_pair(bit32.byteswap(least), bit32.byteswap(most))
+	local most, least = to_pair(u64)
+	return from_pair(bit32.byteswap(least), bit32.byteswap(most))
 end
 
 --[=[
 	Returns whether `lhs` is greater than `rhs`.
 ]=]
 local function gt(lhs: vector, rhs: vector): boolean
-	local l_most, l_least = u32_from_u64(lhs)
-	local r_most, r_least = u32_from_u64(rhs)
+	local l_most, l_least = to_pair(lhs)
+	local r_most, r_least = to_pair(rhs)
 
 	if l_most == r_most then
 		return l_least > r_least
@@ -352,8 +351,8 @@ end
 	Returns whether `lhs` is less than `rhs`.
 ]=]
 local function lt(lhs: vector, rhs: vector): boolean
-	local l_most, l_least = u32_from_u64(lhs)
-	local r_most, r_least = u32_from_u64(rhs)
+	local l_most, l_least = to_pair(lhs)
+	local r_most, r_least = to_pair(rhs)
 
 	if l_most == r_most then
 		return l_least < r_least
@@ -448,8 +447,8 @@ local function mult(lhs: vector, rhs: vector): vector
 	-- you end up with e.g. (A * 2 ^ 48 * E * 2 ^ 48) which is A * E * 2^96.
 	-- Otherwise... Here we go.
 
-	local a, b, c, d = u16_from_u64(lhs)
-	local e, f, g, h = u16_from_u64(rhs)
+	local a, b, c, d = to_quartet(lhs)
+	local e, f, g, h = to_quartet(rhs)
 
 	local product_4 = d * h
 	local product_3 = bit32.rshift(product_4, 16) + c * h
@@ -467,7 +466,7 @@ local function mult(lhs: vector, rhs: vector): vector
 	-- We skip truncating any of the products the last time since they'll never
 	-- overflow and bit32 will truncate them for us.
 
-	return u64_from_pair(bit32.replace(product_2, product_1, 16, 16), bit32.replace(product_4, product_3, 16, 16))
+	return from_pair(bit32.replace(product_2, product_1, 16, 16), bit32.replace(product_4, product_3, 16, 16))
 end
 
 --[=[
@@ -482,7 +481,7 @@ local function div(lhs: vector, rhs: vector): vector
 	elseif countlz(lhs) >= 11 and countlz(rhs) >= 11 then
 		local l_real = to_f64(lhs)
 		local r_real = to_f64(rhs)
-		return u64_from_f64(l_real / r_real) -- , u64_from_f64(math.fmod(l_real, r_real))
+		return from_f64(l_real / r_real) -- , u64_from_f64(math.fmod(l_real, r_real))
 	end
 
 	local quotient = ZERO
@@ -536,7 +535,7 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
-local n = u64_from_u32(0x80000000)
+local n = from_u32(0x80000000)
 local n_2 = 4
 local d = arshift(n, n_2)
 -- local d_2 = arshift_2(n, n_2)
@@ -581,18 +580,18 @@ return {
 	--- The maximum supported integer value for an `f32` (2 ^ 23 - 1).
 	MAX_F32 = MAX_F32,
 
-	from_pair = u64_from_pair,
-	from_u32 = u64_from_u32,
-	from_f64 = u64_from_f64,
-	from_string = u64_from_string,
-	from_buffer = u64_from_buffer,
+	from_pair = from_pair,
+	from_u32 = from_u32,
+	from_f64 = from_f64,
+	from_string = from_string,
+	from_buffer = from_buffer,
 
-	to_pair = u32_from_u64,
-	to_quartet = u16_from_u64,
+	to_pair = to_pair,
+	to_quartet = to_quartet,
 	to_f64 = to_f64,
 
-	to_string = to_bytes_string,
-	to_buffer = to_bytes_buffer,
+	to_string = to_string,
+	to_buffer = to_buffer,
 	to_hex_string = to_hex_string,
 	to_bin_string = to_bin_string,
 
