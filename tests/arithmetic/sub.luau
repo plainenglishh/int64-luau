@@ -33,3 +33,5 @@ for lhs = 1, 2 ^ 8 do
 		end
 	end
 end
+
+return {}

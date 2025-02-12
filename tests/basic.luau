@@ -412,3 +412,5 @@ assert(gte_8, "gte_8 returned the wrong result")
 
 local gte_9 = bit64.gt_equal(bit64.from_pair(0, 0xdeadbeef), bit64.from_pair(0, 0xdeadbeef))
 assert(gte_9, "gte_9 returned the wrong result")
+
+return {}

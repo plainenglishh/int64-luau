@@ -191,3 +191,5 @@ assert(bit64.to_hex_string(byteswap_4) == "0000000000000000", "byteswap_4 was no
 
 local byteswap_5 = bit64.byteswap(bit64.from_pair(0x00000075, 0x42000000))
 assert(bit64.to_hex_string(byteswap_5) == "0000004275000000", "byteswap_5 was not correct")
+
+return {}

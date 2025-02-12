@@ -211,3 +211,5 @@ assert(bit64.to_hex_string(bit64.lshift(lshift_3, 61)) == "c000000000000000", "0
 assert(bit64.to_hex_string(bit64.lshift(lshift_3, 62)) == "8000000000000000", "0xdeadbeef77c0ffee << 62 was wrong")
 assert(bit64.to_hex_string(bit64.lshift(lshift_3, 63)) == "0000000000000000", "0xdeadbeef77c0ffee << 63 was wrong")
 assert(bit64.to_hex_string(bit64.lshift(lshift_3, 64)) == "0000000000000000", "0xdeadbeef77c0ffee << 64 was wrong")
+
+return {}

@@ -41,3 +41,5 @@ assert(bit64.to_hex_string(test_13) == "0000000000000000", "test 13 (0xfffffffff
 
 local error_when_zero = pcall(bit64.div, bit64.from_pair(0, 1), vector.zero)
 assert(not error_when_zero, "modulo allowed division by zero")
+
+return {}

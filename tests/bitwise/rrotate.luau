@@ -119,3 +119,5 @@ assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 61)) == "f56df77bbe07ff76", 
 assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 62)) == "7ab6fbbddf03ffbb", "0xdeadbeef77c0ffee RROT 62 was wrong")
 assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 63)) == "bd5b7ddeef81ffdd", "0xdeadbeef77c0ffee RROT 63 was wrong")
 assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee RROT 64 was wrong")
+
+return {}

@@ -59,3 +59,5 @@ for i, expected in pow_table do
 		error(`2 ^ {i} failed (expected {expected}, got {result})`)
 	end
 end
+
+return {}

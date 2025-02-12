@@ -68,3 +68,5 @@ for i, expected in pow_table do
 		error(`mult by 2 cycle {i} failed (0x{truncated} * 2 was wrong)`)
 	end
 end
+
+return {}

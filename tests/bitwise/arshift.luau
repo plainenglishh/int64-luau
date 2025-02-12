@@ -123,3 +123,5 @@ for i = 33, 64 do
 	local shifted = bit64.to_hex_string(bit64.arshift(arshift_2, i))
 	assert(shifted == "0000000000000000", `0x33333333 >> {i} was wrong`)
 end
+
+return {}

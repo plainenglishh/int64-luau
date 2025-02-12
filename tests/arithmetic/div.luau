@@ -135,3 +135,5 @@ assert(
 assert(threshold_3.x == 0, "threshold test 3 had wrong x component")
 assert(threshold_3.y == 0, "threshold test 3 had wrong y component")
 assert(threshold_3.z == 1, "threshold test 3 had wrong z component")
+
+return {}
