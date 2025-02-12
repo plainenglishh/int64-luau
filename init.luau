@@ -542,30 +542,24 @@ end
 	Additionally, `0 ^ 0` is treated as being `1`.
 ]=]
 local function pow(base: vector, power: number): vector
+	-- TODO: Is there an efficient solution that isn't recursion?
 	if power == 0 then
 		return ONE
-	elseif band(base, sub(base, ONE)) == ZERO then
-		return lshift(ONE, countrz(base) * power)
+	elseif power % 2 == 1 then
+		return mult(base, pow(base, power - 1))
+	else
+		local temp = pow(base, power / 2)
+		return mult(temp, temp)
 	end
-
-	local power_vec = u64_from_u32(power)
-	local result = ONE
-	for i = 64, 1, -1 do
-		if not btest(power_vec, ONE) then
-			result = mult(result, base)
-		end
-		base = mult(base, base)
-		power_vec = rshift(power_vec, 1)
-	end
-	return result
 end
 
 -- TODO: then bitwise ops
+-- TODO: verify error states on bitwise ops
 
-local n = u64_from_pair(0, 4)
+local n = u64_from_pair(0, 3)
 local n_2 = 4
 local d = pow(n, n_2)
--- local d_2 = mult_2(n, n_2)
+-- local d_2 = pow_2(n, n_2)
 print(d.x, d.y, d.z)
 -- print(d_2.x, d_2.y, d_2.z)
 print(to_hex_string(d))
@@ -582,7 +576,7 @@ print(to_hex_string(d))
 -- local c2 = 0
 -- while os.clock() - t2 <= 1 do
 -- 	c2 += 1
--- 	mult_2(n, n_2)
+-- 	pow_2(n, n_2)
 -- end
 -- print("Cycles after: ", c2)
 
