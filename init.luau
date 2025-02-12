@@ -208,10 +208,12 @@ end
 --[=[
 	Shifts the provided `u64` logically left by `n` bits.
 
-	This function will error if `n` is outside the range `[0, 64]`.
+	This function will error if `n` is negative.
 ]=]
 local function lshift(u64: vector, n: number): vector
-	if n == 0 then
+	if n >= 64 then
+		return vector.zero
+	elseif n == 0 then
 		return u64
 	end
 	local most, least = u32_from_u64(u64)
@@ -229,7 +231,7 @@ end
 --[=[
 	Shifts the provided `u64` logically right by `n` bits.
 
-	This function will error if `n` is outside the range `[0, 64]`.
+	This function will error if `n` is negative.
 ]=]
 local function rshift(u64: vector, n: number): vector
 	if n == 0 then
@@ -253,50 +255,43 @@ end
 	This function will error if `n` is outside the range `[0, 64]`.
 ]=]
 local function arshift(u64: vector, n: number): vector
-	if n == 0 then
-		return u64
-	end
-	local most, least = u32_from_u64(u64)
-	if n < 32 then
-		local ret = u64_from_pair(bit32.arshift(most, n), bit32.replace(bit32.rshift(least, n), most, 32 - n, n))
-		return ret
+	-- If the sign bit is set, we do arshift
+	if bit32.btest(u64.x, 0x20_0000) then
+		if n >= 64 then
+			return MAX
+		else
+			return bor(rshift(u64, n), bnot(rshift(MAX, n)))
+		end
 	else
-		local ret = u64_from_pair(
-			if bit32.btest(most, 0x8000_0000) then 0xFFFF_FFFF else 0x0000_0000,
-			bit32.arshift(most, n - 32)
-		)
-		return ret
+		-- Otherwise it's just an rshift
+		return rshift(u64, n)
 	end
 end
 
 --[=[
 	Rotates the bits of the provided `u64` left by `n` bits. 
 
-	This function will error if `n` is outside the range `[0, 64]`.
+	If `n` is negative, this is equivalent to `rrotate`. Otherwise, if `n` is
+	greater than 64-bits, it will wrap around.
 ]=]
 local function lrotate(u64: vector, n: number): vector
-	if n == 64 then
-		return u64
-	else
-		local lshifted = lshift(u64, n)
-		local rshifted = rshift(u64, 64 - n)
-		return bor(lshifted, rshifted)
-	end
+	n = bit32.band(n, 63)
+	local lshifted = lshift(u64, n)
+	local rshifted = rshift(u64, 64 - n)
+	return bor(lshifted, rshifted)
 end
 
 --[=[
 	Rotates the bits of the provided `u64` right by `n` bits. 
 
-	This function will error if `n` is outside the range `[0, 64]`.
+	If `n` is negative, this is equivalent to `lrotate`. Otherwise, if `n` is
+	greater than 64-bits, it will wrap around.
 ]=]
 local function rrotate(u64: vector, n: number): vector
-	if n == 64 then
-		return u64
-	else
-		local lshifted = rshift(u64, n)
-		local rshifted = lshift(u64, 64 - n)
-		return bor(lshifted, rshifted)
-	end
+	n = bit32.band(n, 63)
+	local lshifted = lshift(u64, 64 - n)
+	local rshifted = rshift(u64, n)
+	return bor(lshifted, rshifted)
 end
 
 --[=[
@@ -553,12 +548,10 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
--- TODO: verify error states on bitwise ops
-
-local n = u64_from_pair(0, 3)
+local n = u64_from_u32(0x80000000)
 local n_2 = 4
-local d = pow(n, n_2)
--- local d_2 = pow_2(n, n_2)
+local d = arshift(n, n_2)
+-- local d_2 = arshift_2(n, n_2)
 print(d.x, d.y, d.z)
 -- print(d_2.x, d_2.y, d_2.z)
 print(to_hex_string(d))
@@ -568,14 +561,14 @@ print(to_hex_string(d))
 -- local c1 = 0
 -- while os.clock() - t1 <= 1 do
 -- 	c1 += 1
--- 	pow(n, n_2)
+-- 	arshift(n, n_2)
 -- end
 -- print("Cycles before:", c1)
 -- local t2 = os.clock()
 -- local c2 = 0
 -- while os.clock() - t2 <= 1 do
 -- 	c2 += 1
--- 	pow_2(n, n_2)
+-- 	arshift_2(n, n_2)
 -- end
 -- print("Cycles after: ", c2)
 
