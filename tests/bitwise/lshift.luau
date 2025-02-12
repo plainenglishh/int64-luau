@@ -212,4 +212,13 @@ assert(bit64.to_hex_string(bit64.lshift(lshift_3, 62)) == "8000000000000000", "0
 assert(bit64.to_hex_string(bit64.lshift(lshift_3, 63)) == "0000000000000000", "0xdeadbeef77c0ffee << 63 was wrong")
 assert(bit64.to_hex_string(bit64.lshift(lshift_3, 64)) == "0000000000000000", "0xdeadbeef77c0ffee << 64 was wrong")
 
+for i = -64, -1 do
+	local shifted = pcall(bit64.lshift, bit64.ONE, i)
+	assert(not shifted, "lshift allowed negative arguments when it shouldn't")
+end
+for i = 65, 128 do
+	local shifted = pcall(bit64.lshift, bit64.ONE, i)
+	assert(not shifted, "lshift allowed greater than 64 arguments when it shouldn't")
+end
+
 return {}

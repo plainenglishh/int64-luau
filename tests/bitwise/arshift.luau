@@ -124,4 +124,13 @@ for i = 33, 64 do
 	assert(shifted == "0000000000000000", `0x33333333 >> {i} was wrong`)
 end
 
+for i = -64, -1 do
+	local shifted = pcall(bit64.arshift, bit64.ONE, i)
+	assert(not shifted, "arshift allowed negative arguments when it shouldn't")
+end
+for i = 65, 128 do
+	local shifted = pcall(bit64.arshift, bit64.ONE, i)
+	assert(not shifted, "arshift allowed greater than 64 arguments when it shouldn't")
+end
+
 return {}

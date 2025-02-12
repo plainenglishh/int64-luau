@@ -122,4 +122,13 @@ assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 62)) == "b7ab6fbbddf03ffb", 
 assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 63)) == "6f56df77bbe07ff7", "0xdeadbeef77c0ffee LROT 63 was wrong")
 assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee LROT 64 was wrong")
 
+for i = -64, -1 do
+	local shifted = pcall(bit64.lrotate, bit64.ONE, i)
+	assert(not shifted, "lrotate allowed negative arguments when it shouldn't")
+end
+for i = 65, 128 do
+	local shifted = pcall(bit64.lrotate, bit64.ONE, i)
+	assert(not shifted, "lrotate allowed greater than 64 arguments when it shouldn't")
+end
+
 return {}

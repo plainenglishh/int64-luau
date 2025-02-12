@@ -120,4 +120,13 @@ assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 62)) == "7ab6fbbddf03ffbb", 
 assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 63)) == "bd5b7ddeef81ffdd", "0xdeadbeef77c0ffee RROT 63 was wrong")
 assert(bit64.to_hex_string(bit64.rrotate(rrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee RROT 64 was wrong")
 
+for i = -64, -1 do
+	local shifted = pcall(bit64.rrotate, bit64.ONE, i)
+	assert(not shifted, "rrotate allowed negative arguments when it shouldn't")
+end
+for i = 65, 128 do
+	local shifted = pcall(bit64.rrotate, bit64.ONE, i)
+	assert(not shifted, "rrotate allowed greater than 64 arguments when it shouldn't")
+end
+
 return {}
