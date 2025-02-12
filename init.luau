@@ -153,18 +153,6 @@ local function is_zero(u64: vector): boolean
 end
 
 --[=[
-	Normalizes the u64. Neecessary to ensure the internal logic is
-	consistent.
-]=]
-local function normalize(u64: vector): vector
-	return vector.create(
-		bit32.band(u64.x, 0b1111_1111_1111_1111_1111_11),
-		bit32.band(u64.y, 0b1111_1111_1111_1111_1111),
-		bit32.band(u64.z, 0b1111_1111_1111_1111_1111_11)
-	)
-end
-
---[=[
 	Computes the bitwise AND of the two provide values.
 
 	This does not accept a vararg like the `bit32` equivalent for performance
