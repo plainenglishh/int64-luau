@@ -583,30 +583,6 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
-local n = from_u32(0x80000000)
-local n_2 = 4
-local d = arshift(n, n_2)
--- local d_2 = arshift_2(n, n_2)
-print(d.x, d.y, d.z)
--- print(d_2.x, d_2.y, d_2.z)
-print(to_hex_string(d))
--- print(to_hex_string(d_2))
-
--- local t1 = os.clock()
--- local c1 = 0
--- while os.clock() - t1 <= 1 do
--- 	c1 += 1
--- 	arshift(n, n_2)
--- end
--- print("Cycles before:", c1)
--- local t2 = os.clock()
--- local c2 = 0
--- while os.clock() - t2 <= 1 do
--- 	c2 += 1
--- 	arshift_2(n, n_2)
--- end
--- print("Cycles after: ", c2)
-
 -- TODO: replace and extract
 -- TODO: to_decimal_string
 -- TODO: vararg versions of band, bor, bxor
