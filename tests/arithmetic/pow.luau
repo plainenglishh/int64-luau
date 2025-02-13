@@ -1,35 +1,35 @@
-local bit64 = require("../../init")
+local int64 = require("../../init")
 
-local test_1 = bit64.pow(bit64.from_pair(0, 3), 4)
-assert(bit64.to_hex_string(test_1) == "0000000000000051", "pow test 1 (3 ^ 4) failed")
+local test_1 = int64.pow(int64.from_pair(0, 3), 4)
+assert(int64.to_hex_string(test_1) == "0000000000000051", "pow test 1 (3 ^ 4) failed")
 
-local test_2 = bit64.pow(bit64.from_pair(0, 5), 1)
-assert(bit64.to_hex_string(test_2) == "0000000000000005", "pow test 2 (5 ^ 1) failed")
+local test_2 = int64.pow(int64.from_pair(0, 5), 1)
+assert(int64.to_hex_string(test_2) == "0000000000000005", "pow test 2 (5 ^ 1) failed")
 
-local test_3 = bit64.pow(bit64.from_pair(0, 7), 0)
-assert(bit64.to_hex_string(test_3) == "0000000000000001", "pow test 3 (7 ^ 0) failed")
+local test_3 = int64.pow(int64.from_pair(0, 7), 0)
+assert(int64.to_hex_string(test_3) == "0000000000000001", "pow test 3 (7 ^ 0) failed")
 
-local test_4 = bit64.pow(bit64.from_pair(0, 1), 1000000)
-assert(bit64.to_hex_string(test_4) == "0000000000000001", "pow test 4 (1 ^ 1000000) failed")
+local test_4 = int64.pow(int64.from_pair(0, 1), 1000000)
+assert(int64.to_hex_string(test_4) == "0000000000000001", "pow test 4 (1 ^ 1000000) failed")
 
-local test_5 = bit64.pow(bit64.from_pair(0, 0), 1000000)
-assert(bit64.to_hex_string(test_5) == "0000000000000000", "pow test 5 (0 ^ 1000000) failed")
+local test_5 = int64.pow(int64.from_pair(0, 0), 1000000)
+assert(int64.to_hex_string(test_5) == "0000000000000000", "pow test 5 (0 ^ 1000000) failed")
 
-local test_6 = bit64.pow(bit64.from_pair(0, 5), 23)
-assert(bit64.to_hex_string(test_6) == "002a5a058fc295ed", "pow test 6 (5 ^ 23) failed")
+local test_6 = int64.pow(int64.from_pair(0, 5), 23)
+assert(int64.to_hex_string(test_6) == "002a5a058fc295ed", "pow test 6 (5 ^ 23) failed")
 
-local test_7 = bit64.pow(bit64.from_pair(0, 12345), 10)
-assert(bit64.to_hex_string(test_7) == "e806d2995ae9b971", "pow test 7 (12345 ^ 10) failed")
+local test_7 = int64.pow(int64.from_pair(0, 12345), 10)
+assert(int64.to_hex_string(test_7) == "e806d2995ae9b971", "pow test 7 (12345 ^ 10) failed")
 
 -- This matches the behavior of Luau, so we stick with it.
-local test_8 = bit64.pow(vector.zero, 0)
-assert(bit64.to_hex_string(test_8) == "0000000000000001", "pow test 8 (0 ^ 0) failed")
+local test_8 = int64.pow(vector.zero, 0)
+assert(int64.to_hex_string(test_8) == "0000000000000001", "pow test 8 (0 ^ 0) failed")
 
-local test_9 = bit64.pow(bit64.from_pair(0xffffffff, 0xffffffff), 0xfffffff)
-assert(bit64.to_hex_string(test_9) == "ffffffffffffffff", "pow test 9 (0xffffffffffffffff ^ 0xffffffff) failed")
+local test_9 = int64.pow(int64.from_pair(0xffffffff, 0xffffffff), 0xfffffff)
+assert(int64.to_hex_string(test_9) == "ffffffffffffffff", "pow test 9 (0xffffffffffffffff ^ 0xffffffff) failed")
 
-local test_10 = bit64.pow(bit64.from_pair(0xffffffff, 0xffffffff), 0xfffffffe)
-assert(bit64.to_hex_string(test_10) == "0000000000000001", "pow test 10 (0xffffffffffffffff ^ 0xfffffffe) failed")
+local test_10 = int64.pow(int64.from_pair(0xffffffff, 0xffffffff), 0xfffffffe)
+assert(int64.to_hex_string(test_10) == "0000000000000001", "pow test 10 (0xffffffffffffffff ^ 0xfffffffe) failed")
 
 --stylua: ignore
 local pow_table = {
@@ -54,7 +54,7 @@ local pow_table = {
 assert(#pow_table == 64, "pow table was wrong length")
 
 for i, expected in pow_table do
-	local result = bit64.to_hex_string(bit64.pow(bit64.from_pair(0, 2), i))
+	local result = int64.to_hex_string(int64.pow(int64.from_pair(0, 2), i))
 	if result ~= expected then
 		error(`2 ^ {i} failed (expected {expected}, got {result})`)
 	end

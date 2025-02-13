@@ -1,4 +1,4 @@
-# Bit64 Luau
+# Int64 Luau
 
 Implementation of arithmetic and bitwise operations for 64-bit integers in pure Luau. Utilizes `vector` objects to pack the integers efficiently, meaning it avoids expensive table accesses and allocations.
 

@@ -1,161 +1,161 @@
-local bit64 = require("../../init")
+local int64 = require("../../init")
 
-local lrotate_n = bit64.from_pair(0x80000000, 0x00000000)
-assert(bit64.lrotate(lrotate_n, 0) == lrotate_n, `{bit64.to_hex_string(lrotate_n)} LROT 0 was wrong`)
+local lrotate_n = int64.from_pair(0x80000000, 0x00000000)
+assert(int64.lrotate(lrotate_n, 0) == lrotate_n, `{int64.to_hex_string(lrotate_n)} LROT 0 was wrong`)
 
 for i = 1, 63 do
-	local new = bit64.lrotate(lrotate_n, i)
+	local new = int64.lrotate(lrotate_n, i)
 	local expected_bin = string.rep("0", 64 - i) .. "1" .. string.rep("0", i - 1)
-	assert(bit64.to_bin_string(new) == expected_bin, `{bit64.to_hex_string(lrotate_n)} LROT {i} was wrong`)
+	assert(int64.to_bin_string(new) == expected_bin, `{int64.to_hex_string(lrotate_n)} LROT {i} was wrong`)
 end
-assert(bit64.lrotate(lrotate_n, 64) == lrotate_n, `{bit64.to_hex_string(lrotate_n)} LROT 64 was wrong`)
+assert(int64.lrotate(lrotate_n, 64) == lrotate_n, `{int64.to_hex_string(lrotate_n)} LROT 64 was wrong`)
 
-local lrotate_1 = bit64.from_pair(0xcccccccc, 0xcccccccc)
-assert(bit64.lrotate(lrotate_1, 0) == lrotate_1, "0xcccccccccccccccc LROT 0 was wrong")
+local lrotate_1 = int64.from_pair(0xcccccccc, 0xcccccccc)
+assert(int64.lrotate(lrotate_1, 0) == lrotate_1, "0xcccccccccccccccc LROT 0 was wrong")
 
 for i = 1, 64, 4 do
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i)) == "9999999999999999",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i)) == "9999999999999999",
 		`0xcccccccccccccccc LROT {i} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 1)) == "3333333333333333",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 1)) == "3333333333333333",
 		`0xcccccccccccccccc LROT {i + 1} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 2)) == "6666666666666666",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 2)) == "6666666666666666",
 		`0xcccccccccccccccc LROT {i + 2} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 3)) == "cccccccccccccccc",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 3)) == "cccccccccccccccc",
 		`0xcccccccccccccccc LROT {i + 3} was wrong`
 	)
 end
 for i = -64, 0, 4 do
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i)) == "cccccccccccccccc",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i)) == "cccccccccccccccc",
 		`0xcccccccccccccccc LROT {i} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 1)) == "9999999999999999",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 1)) == "9999999999999999",
 		`0xcccccccccccccccc LROT {i + 1} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 2)) == "3333333333333333",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 2)) == "3333333333333333",
 		`0xcccccccccccccccc LROT {i + 2} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_1, i + 3)) == "6666666666666666",
+		int64.to_hex_string(int64.lrotate(lrotate_1, i + 3)) == "6666666666666666",
 		`0xcccccccccccccccc LROT {i + 3} was wrong`
 	)
 end
 
-local lrotate_2 = bit64.from_pair(0x33333333, 0x33333333)
-assert(bit64.lrotate(lrotate_2, 0) == lrotate_2, "0x3333333333333333 LROT 0 was wrong")
+local lrotate_2 = int64.from_pair(0x33333333, 0x33333333)
+assert(int64.lrotate(lrotate_2, 0) == lrotate_2, "0x3333333333333333 LROT 0 was wrong")
 
 for i = 1, 64, 4 do
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i)) == "6666666666666666",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i)) == "6666666666666666",
 		`0x3333333333333333 LROT {i} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 1)) == "cccccccccccccccc",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 1)) == "cccccccccccccccc",
 		`0x3333333333333333 LROT {i + 1} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 2)) == "9999999999999999",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 2)) == "9999999999999999",
 		`0x3333333333333333 LROT {i + 2} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 3)) == "3333333333333333",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 3)) == "3333333333333333",
 		`0x3333333333333333 LROT {i + 3} was wrong`
 	)
 end
 for i = -64, 0, 4 do
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i)) == "3333333333333333",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i)) == "3333333333333333",
 		`0x3333333333333333 LROT {i} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 1)) == "6666666666666666",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 1)) == "6666666666666666",
 		`0x3333333333333333 LROT {i + 1} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 2)) == "cccccccccccccccc",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 2)) == "cccccccccccccccc",
 		`0x3333333333333333 LROT {i + 2} was wrong`
 	)
 	assert(
-		bit64.to_hex_string(bit64.lrotate(lrotate_2, i + 3)) == "9999999999999999",
+		int64.to_hex_string(int64.lrotate(lrotate_2, i + 3)) == "9999999999999999",
 		`0x3333333333333333 LROT {i + 3} was wrong`
 	)
 end
 
-local lrotate_3 = bit64.from_pair(0xdeadbeef, 0x77c0ffee)
-assert(bit64.lrotate(lrotate_3, 0) == lrotate_3, "0xdeadbeef77c0ffee LROT 0 was wrong")
+local lrotate_3 = int64.from_pair(0xdeadbeef, 0x77c0ffee)
+assert(int64.lrotate(lrotate_3, 0) == lrotate_3, "0xdeadbeef77c0ffee LROT 0 was wrong")
 
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 01)) == "bd5b7ddeef81ffdd", "0xdeadbeef77c0ffee LROT  1 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 02)) == "7ab6fbbddf03ffbb", "0xdeadbeef77c0ffee LROT  2 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 03)) == "f56df77bbe07ff76", "0xdeadbeef77c0ffee LROT  3 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 04)) == "eadbeef77c0ffeed", "0xdeadbeef77c0ffee LROT  4 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 05)) == "d5b7ddeef81ffddb", "0xdeadbeef77c0ffee LROT  5 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 06)) == "ab6fbbddf03ffbb7", "0xdeadbeef77c0ffee LROT  6 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 07)) == "56df77bbe07ff76f", "0xdeadbeef77c0ffee LROT  7 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 08)) == "adbeef77c0ffeede", "0xdeadbeef77c0ffee LROT  8 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 09)) == "5b7ddeef81ffddbd", "0xdeadbeef77c0ffee LROT  9 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 10)) == "b6fbbddf03ffbb7a", "0xdeadbeef77c0ffee LROT 10 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 11)) == "6df77bbe07ff76f5", "0xdeadbeef77c0ffee LROT 11 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 12)) == "dbeef77c0ffeedea", "0xdeadbeef77c0ffee LROT 12 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 13)) == "b7ddeef81ffddbd5", "0xdeadbeef77c0ffee LROT 13 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 14)) == "6fbbddf03ffbb7ab", "0xdeadbeef77c0ffee LROT 14 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 15)) == "df77bbe07ff76f56", "0xdeadbeef77c0ffee LROT 15 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 16)) == "beef77c0ffeedead", "0xdeadbeef77c0ffee LROT 16 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 17)) == "7ddeef81ffddbd5b", "0xdeadbeef77c0ffee LROT 17 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 18)) == "fbbddf03ffbb7ab6", "0xdeadbeef77c0ffee LROT 18 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 19)) == "f77bbe07ff76f56d", "0xdeadbeef77c0ffee LROT 19 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 20)) == "eef77c0ffeedeadb", "0xdeadbeef77c0ffee LROT 20 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 21)) == "ddeef81ffddbd5b7", "0xdeadbeef77c0ffee LROT 21 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 22)) == "bbddf03ffbb7ab6f", "0xdeadbeef77c0ffee LROT 22 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 23)) == "77bbe07ff76f56df", "0xdeadbeef77c0ffee LROT 23 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 24)) == "ef77c0ffeedeadbe", "0xdeadbeef77c0ffee LROT 24 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 25)) == "deef81ffddbd5b7d", "0xdeadbeef77c0ffee LROT 25 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 26)) == "bddf03ffbb7ab6fb", "0xdeadbeef77c0ffee LROT 26 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 27)) == "7bbe07ff76f56df7", "0xdeadbeef77c0ffee LROT 27 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 28)) == "f77c0ffeedeadbee", "0xdeadbeef77c0ffee LROT 28 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 29)) == "eef81ffddbd5b7dd", "0xdeadbeef77c0ffee LROT 29 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 30)) == "ddf03ffbb7ab6fbb", "0xdeadbeef77c0ffee LROT 30 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 31)) == "bbe07ff76f56df77", "0xdeadbeef77c0ffee LROT 31 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 32)) == "77c0ffeedeadbeef", "0xdeadbeef77c0ffee LROT 32 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 33)) == "ef81ffddbd5b7dde", "0xdeadbeef77c0ffee LROT 33 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 34)) == "df03ffbb7ab6fbbd", "0xdeadbeef77c0ffee LROT 34 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 35)) == "be07ff76f56df77b", "0xdeadbeef77c0ffee LROT 35 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 36)) == "7c0ffeedeadbeef7", "0xdeadbeef77c0ffee LROT 36 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 37)) == "f81ffddbd5b7ddee", "0xdeadbeef77c0ffee LROT 37 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 38)) == "f03ffbb7ab6fbbdd", "0xdeadbeef77c0ffee LROT 38 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 39)) == "e07ff76f56df77bb", "0xdeadbeef77c0ffee LROT 39 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 40)) == "c0ffeedeadbeef77", "0xdeadbeef77c0ffee LROT 40 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 41)) == "81ffddbd5b7ddeef", "0xdeadbeef77c0ffee LROT 41 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 42)) == "03ffbb7ab6fbbddf", "0xdeadbeef77c0ffee LROT 42 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 43)) == "07ff76f56df77bbe", "0xdeadbeef77c0ffee LROT 43 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 44)) == "0ffeedeadbeef77c", "0xdeadbeef77c0ffee LROT 44 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 45)) == "1ffddbd5b7ddeef8", "0xdeadbeef77c0ffee LROT 45 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 46)) == "3ffbb7ab6fbbddf0", "0xdeadbeef77c0ffee LROT 46 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 47)) == "7ff76f56df77bbe0", "0xdeadbeef77c0ffee LROT 47 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 48)) == "ffeedeadbeef77c0", "0xdeadbeef77c0ffee LROT 48 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 49)) == "ffddbd5b7ddeef81", "0xdeadbeef77c0ffee LROT 49 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 50)) == "ffbb7ab6fbbddf03", "0xdeadbeef77c0ffee LROT 50 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 51)) == "ff76f56df77bbe07", "0xdeadbeef77c0ffee LROT 51 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 52)) == "feedeadbeef77c0f", "0xdeadbeef77c0ffee LROT 52 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 53)) == "fddbd5b7ddeef81f", "0xdeadbeef77c0ffee LROT 53 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 54)) == "fbb7ab6fbbddf03f", "0xdeadbeef77c0ffee LROT 54 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 55)) == "f76f56df77bbe07f", "0xdeadbeef77c0ffee LROT 55 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 56)) == "eedeadbeef77c0ff", "0xdeadbeef77c0ffee LROT 56 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 57)) == "ddbd5b7ddeef81ff", "0xdeadbeef77c0ffee LROT 57 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 58)) == "bb7ab6fbbddf03ff", "0xdeadbeef77c0ffee LROT 58 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 59)) == "76f56df77bbe07ff", "0xdeadbeef77c0ffee LROT 59 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 60)) == "edeadbeef77c0ffe", "0xdeadbeef77c0ffee LROT 60 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 61)) == "dbd5b7ddeef81ffd", "0xdeadbeef77c0ffee LROT 61 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 62)) == "b7ab6fbbddf03ffb", "0xdeadbeef77c0ffee LROT 62 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 63)) == "6f56df77bbe07ff7", "0xdeadbeef77c0ffee LROT 63 was wrong")
-assert(bit64.to_hex_string(bit64.lrotate(lrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee LROT 64 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 01)) == "bd5b7ddeef81ffdd", "0xdeadbeef77c0ffee LROT  1 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 02)) == "7ab6fbbddf03ffbb", "0xdeadbeef77c0ffee LROT  2 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 03)) == "f56df77bbe07ff76", "0xdeadbeef77c0ffee LROT  3 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 04)) == "eadbeef77c0ffeed", "0xdeadbeef77c0ffee LROT  4 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 05)) == "d5b7ddeef81ffddb", "0xdeadbeef77c0ffee LROT  5 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 06)) == "ab6fbbddf03ffbb7", "0xdeadbeef77c0ffee LROT  6 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 07)) == "56df77bbe07ff76f", "0xdeadbeef77c0ffee LROT  7 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 08)) == "adbeef77c0ffeede", "0xdeadbeef77c0ffee LROT  8 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 09)) == "5b7ddeef81ffddbd", "0xdeadbeef77c0ffee LROT  9 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 10)) == "b6fbbddf03ffbb7a", "0xdeadbeef77c0ffee LROT 10 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 11)) == "6df77bbe07ff76f5", "0xdeadbeef77c0ffee LROT 11 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 12)) == "dbeef77c0ffeedea", "0xdeadbeef77c0ffee LROT 12 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 13)) == "b7ddeef81ffddbd5", "0xdeadbeef77c0ffee LROT 13 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 14)) == "6fbbddf03ffbb7ab", "0xdeadbeef77c0ffee LROT 14 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 15)) == "df77bbe07ff76f56", "0xdeadbeef77c0ffee LROT 15 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 16)) == "beef77c0ffeedead", "0xdeadbeef77c0ffee LROT 16 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 17)) == "7ddeef81ffddbd5b", "0xdeadbeef77c0ffee LROT 17 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 18)) == "fbbddf03ffbb7ab6", "0xdeadbeef77c0ffee LROT 18 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 19)) == "f77bbe07ff76f56d", "0xdeadbeef77c0ffee LROT 19 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 20)) == "eef77c0ffeedeadb", "0xdeadbeef77c0ffee LROT 20 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 21)) == "ddeef81ffddbd5b7", "0xdeadbeef77c0ffee LROT 21 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 22)) == "bbddf03ffbb7ab6f", "0xdeadbeef77c0ffee LROT 22 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 23)) == "77bbe07ff76f56df", "0xdeadbeef77c0ffee LROT 23 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 24)) == "ef77c0ffeedeadbe", "0xdeadbeef77c0ffee LROT 24 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 25)) == "deef81ffddbd5b7d", "0xdeadbeef77c0ffee LROT 25 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 26)) == "bddf03ffbb7ab6fb", "0xdeadbeef77c0ffee LROT 26 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 27)) == "7bbe07ff76f56df7", "0xdeadbeef77c0ffee LROT 27 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 28)) == "f77c0ffeedeadbee", "0xdeadbeef77c0ffee LROT 28 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 29)) == "eef81ffddbd5b7dd", "0xdeadbeef77c0ffee LROT 29 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 30)) == "ddf03ffbb7ab6fbb", "0xdeadbeef77c0ffee LROT 30 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 31)) == "bbe07ff76f56df77", "0xdeadbeef77c0ffee LROT 31 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 32)) == "77c0ffeedeadbeef", "0xdeadbeef77c0ffee LROT 32 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 33)) == "ef81ffddbd5b7dde", "0xdeadbeef77c0ffee LROT 33 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 34)) == "df03ffbb7ab6fbbd", "0xdeadbeef77c0ffee LROT 34 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 35)) == "be07ff76f56df77b", "0xdeadbeef77c0ffee LROT 35 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 36)) == "7c0ffeedeadbeef7", "0xdeadbeef77c0ffee LROT 36 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 37)) == "f81ffddbd5b7ddee", "0xdeadbeef77c0ffee LROT 37 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 38)) == "f03ffbb7ab6fbbdd", "0xdeadbeef77c0ffee LROT 38 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 39)) == "e07ff76f56df77bb", "0xdeadbeef77c0ffee LROT 39 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 40)) == "c0ffeedeadbeef77", "0xdeadbeef77c0ffee LROT 40 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 41)) == "81ffddbd5b7ddeef", "0xdeadbeef77c0ffee LROT 41 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 42)) == "03ffbb7ab6fbbddf", "0xdeadbeef77c0ffee LROT 42 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 43)) == "07ff76f56df77bbe", "0xdeadbeef77c0ffee LROT 43 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 44)) == "0ffeedeadbeef77c", "0xdeadbeef77c0ffee LROT 44 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 45)) == "1ffddbd5b7ddeef8", "0xdeadbeef77c0ffee LROT 45 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 46)) == "3ffbb7ab6fbbddf0", "0xdeadbeef77c0ffee LROT 46 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 47)) == "7ff76f56df77bbe0", "0xdeadbeef77c0ffee LROT 47 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 48)) == "ffeedeadbeef77c0", "0xdeadbeef77c0ffee LROT 48 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 49)) == "ffddbd5b7ddeef81", "0xdeadbeef77c0ffee LROT 49 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 50)) == "ffbb7ab6fbbddf03", "0xdeadbeef77c0ffee LROT 50 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 51)) == "ff76f56df77bbe07", "0xdeadbeef77c0ffee LROT 51 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 52)) == "feedeadbeef77c0f", "0xdeadbeef77c0ffee LROT 52 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 53)) == "fddbd5b7ddeef81f", "0xdeadbeef77c0ffee LROT 53 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 54)) == "fbb7ab6fbbddf03f", "0xdeadbeef77c0ffee LROT 54 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 55)) == "f76f56df77bbe07f", "0xdeadbeef77c0ffee LROT 55 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 56)) == "eedeadbeef77c0ff", "0xdeadbeef77c0ffee LROT 56 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 57)) == "ddbd5b7ddeef81ff", "0xdeadbeef77c0ffee LROT 57 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 58)) == "bb7ab6fbbddf03ff", "0xdeadbeef77c0ffee LROT 58 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 59)) == "76f56df77bbe07ff", "0xdeadbeef77c0ffee LROT 59 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 60)) == "edeadbeef77c0ffe", "0xdeadbeef77c0ffee LROT 60 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 61)) == "dbd5b7ddeef81ffd", "0xdeadbeef77c0ffee LROT 61 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 62)) == "b7ab6fbbddf03ffb", "0xdeadbeef77c0ffee LROT 62 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 63)) == "6f56df77bbe07ff7", "0xdeadbeef77c0ffee LROT 63 was wrong")
+assert(int64.to_hex_string(int64.lrotate(lrotate_3, 64)) == "deadbeef77c0ffee", "0xdeadbeef77c0ffee LROT 64 was wrong")
 
 return {}
