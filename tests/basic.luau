@@ -263,6 +263,23 @@ local to_buffer_3 = int64.to_buffer(from_string_3)
 assert(buffer.len(to_buffer_3) == 8, "to_buffer_3 returned a buffer that is not 8 bytes")
 assert(buffer.tostring(to_buffer_3) == from_string_3_input, "to_buffer_3 is not correct")
 
+local write_buffer = buffer.create(16)
+
+int64.write_to_buffer(write_buffer, from_string_1, 0)
+int64.write_to_buffer(write_buffer, from_string_3, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_string_1_input, "write_to_buffer 1 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_string_3_input, "write_to_buffer 1 offset by 8 was wrong")
+
+int64.write_to_buffer(write_buffer, from_string_2, 0)
+int64.write_to_buffer(write_buffer, from_string_2, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_string_2_input, "write_to_buffer 2 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_string_2_input, "write_to_buffer 2 offset by 8 was wrong")
+
+int64.write_to_buffer(write_buffer, from_string_3, 0)
+int64.write_to_buffer(write_buffer, from_string_1, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_string_3_input, "write_to_buffer 3 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_string_1_input, "write_to_buffer 3 offset by 8 was wrong")
+
 local to_hex_string_1 = int64.to_hex_string(from_pair_1)
 assert(to_hex_string_1 == "0000000000000000", "to_hex_string_1 did not return the expected result")
 

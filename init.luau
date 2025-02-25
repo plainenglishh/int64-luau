@@ -148,6 +148,18 @@ local function to_buffer(u64: vector): buffer
 end
 
 --[=[
+	Writes the provided `u64` to the provided buffer. The value is written
+	to the buffer at the provided offset.
+
+	The integer is written as a little-endian value.
+]=]
+local function write_to_buffer(b: buffer, u64: vector, offset: number)
+	local most, least = to_pair(u64)
+	buffer.writeu32(b, offset, least)
+	buffer.writeu32(b, offset + 4, most)
+end
+
+--[=[
 	Converts the provided `u64` to string of binary data.
 
 	The integer is written as if it were little-endian.
@@ -615,6 +627,7 @@ return {
 
 	to_string = to_string,
 	to_buffer = to_buffer,
+	write_to_buffer = write_to_buffer,
 	to_hex_string = to_hex_string,
 	to_bin_string = to_bin_string,
 
