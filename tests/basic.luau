@@ -465,4 +465,36 @@ assert(int64.is_zero(from_string_1), "is_zero was wrong for from_string_1")
 assert(not int64.is_zero(from_string_2), "is_zero was wrong for from_string_2")
 assert(not int64.is_zero(from_string_3), "is_zero was wrong for from_string_3")
 
+-- from_decimal_string
+
+local from_decimal_string_1 = int64.from_decimal_string("0")
+assert(int64.to_hex_string(from_decimal_string_1) == "0000000000000000", "from_decimal_string_1 parsed wrong")
+
+local from_decimal_string_2 = int64.from_decimal_string("42")
+assert(int64.to_hex_string(from_decimal_string_2) == "000000000000002a", "from_decimal_string_2 parsed wrong")
+
+local from_decimal_string_3 = int64.from_decimal_string("4294967295")
+assert(int64.to_hex_string(from_decimal_string_3) == "00000000ffffffff", "from_decimal_string_3 parsed wrong")
+
+local from_decimal_string_4 = int64.from_decimal_string("4294967296")
+assert(int64.to_hex_string(from_decimal_string_4) == "0000000100000000", "from_decimal_string_4 parsed wrong")
+
+local from_decimal_string_5 = int64.from_decimal_string("9007199254740991")
+assert(int64.to_hex_string(from_decimal_string_5) == "001fffffffffffff", "from_decimal_string_5 parsed wrong")
+
+local from_decimal_string_6 = int64.from_decimal_string("18446744073709551615")
+assert(int64.to_hex_string(from_decimal_string_6) == "ffffffffffffffff", "from_decimal_string_6 parsed wrong")
+
+local from_decimal_string_7 = int64.from_decimal_string("12345678901234567890")
+assert(int64.to_hex_string(from_decimal_string_7) == "ab54a98ceb1f0ad2", "from_decimal_string_7 parsed wrong")
+
+local from_decimal_string_8 = int64.from_decimal_string("18446744073709551557")
+assert(int64.to_hex_string(from_decimal_string_8) == "ffffffffffffffc5", "from_decimal_string_8 parsed wrong")
+
+local from_decimal_string_9 = int64.from_decimal_string("0000000000000000000001")
+assert(int64.to_hex_string(from_decimal_string_9) == "0000000000000001", "from_decimal_string_9 parsed wrong")
+
+local from_decimal_string_10 = int64.from_decimal_string("18446744078004518911")
+assert(int64.to_hex_string(from_decimal_string_10) == "00000000ffffffff", "from_decimal_string_10 parsed wrong")
+
 return {}

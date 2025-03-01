@@ -86,6 +86,25 @@ local function from_string(str: string, offset: number?): vector
 	return from_pair(most, least)
 end
 
+local function from_decimal_string(str: string): vector
+	local low, high = 0, 0
+	for i = 1, #str do
+		-- The ascii code for zero is `48`.
+		local digit = string.byte(str, i, i) - 48
+
+		low *= 10
+		high = high * 10 + low // 2 ^ 32
+		low = bit32.bor(low, 0) + digit
+
+		if low >= 2 ^ 32 then
+			low -= 2 ^ 32
+			high += 1
+		end
+	end
+
+	return from_pair(high, low)
+end
+
 --[=[
 	Converts the provided `u64` into two 32-bit integers.
 
@@ -620,6 +639,8 @@ return {
 	from_f64 = from_f64,
 	from_string = from_string,
 	from_buffer = from_buffer,
+
+	from_decimal_string = from_decimal_string,
 
 	to_pair = to_pair,
 	to_quartet = to_quartet,
