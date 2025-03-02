@@ -57,55 +57,6 @@ local function from_f64(f64: number): vector
 end
 
 --[=[
-	Reads a `u64` from the provided buffer. If offset is provided, reads from
-	that spot in the buffer. Otherwise, reads from the beginning.
-
-	This function reads a little-endian value from the buffer.
-]=]
-local function from_buffer(buf: buffer, offset: number?): vector
-	offset = offset or 0
-	local least = buffer.readu32(buf, offset :: number)
-	local most = buffer.readu32(buf, offset :: number + 4)
-
-	return from_pair(most, least)
-end
-
---[=[
-	Reads a `u64` from the provided string. If offset is provided, reads from
-	that point in the string. Otherwise starts at the beginning.
-
-	This function reads a little-endian value from the string.
-]=]
-local function from_string(str: string, offset: number?): vector
-	offset = offset or 1
-	-- This is deliberately backwards because we expect a little endian input
-	local d, c, b, a, h, g, f, e = string.byte(str, offset, offset :: number + 7)
-	local least = bit32.bor(bit32.lshift(bit32.replace(b, a, 8, 8), 16), bit32.replace(d, c, 8, 8))
-	local most = bit32.bor(bit32.lshift(bit32.replace(f, e, 8, 8), 16), bit32.replace(h, g, 8, 8))
-
-	return from_pair(most, least)
-end
-
-local function from_decimal_string(str: string): vector
-	local low, high = 0, 0
-	for i = 1, #str do
-		-- The ascii code for zero is `48`.
-		local digit = string.byte(str, i, i) - 48
-
-		low *= 10
-		high = high * 10 + low // 2 ^ 32
-		low = bit32.bor(low, 0) + digit
-
-		if low >= 2 ^ 32 then
-			low -= 2 ^ 32
-			high += 1
-		end
-	end
-
-	return from_pair(high, low)
-end
-
---[=[
 	Converts the provided `u64` into two 32-bit integers.
 
 	This returns the most significant portion of the number first.
@@ -149,76 +100,6 @@ end
 local function to_f64(u64: vector): number
 	local most, least = to_pair(u64)
 	return most * 2 ^ 32 + least
-end
-
---[=[
-	Converts the provided `u64` to a buffer.
-
-	The integer is written as a little-endian value.
-]=]
-local function to_buffer(u64: vector): buffer
-	local most, least = to_pair(u64)
-	local buf = buffer.create(8)
-	-- We use a little endian format because it doesn't matter and most
-	-- systems we run on are little endian so it'll be nicer for them.
-	buffer.writeu32(buf, 0, least)
-	buffer.writeu32(buf, 4, most)
-	return buf
-end
-
---[=[
-	Writes the provided `u64` to the provided buffer. The value is written
-	to the buffer at the provided offset.
-
-	The integer is written as a little-endian value.
-]=]
-local function write_to_buffer(b: buffer, u64: vector, offset: number)
-	local most, least = to_pair(u64)
-	buffer.writeu32(b, offset, least)
-	buffer.writeu32(b, offset + 4, most)
-end
-
---[=[
-	Converts the provided `u64` to string of binary data.
-
-	The integer is written as if it were little-endian.
-]=]
-local function to_string(u64: vector): string
-	local most, least = to_pair(u64)
-	-- Previous implementation of this used `%c` but it turns out that
-	-- `string.format("%c", 0)` results in a zero length string!
-	return string.char(
-		bit32.band(least, 0xFF),
-		bit32.extract(least, 8, 8),
-		bit32.extract(least, 16, 8),
-		bit32.rshift(least, 24),
-		bit32.band(most, 0xFF),
-		bit32.extract(most, 8, 8),
-		bit32.extract(most, 16, 8),
-		bit32.rshift(most, 24)
-	)
-end
-
---[=[
-	Converts the provided `u64` to a string of 16 hexadecimal digits.
-
-	The returned string will always be 16 bytes and the number is formatted as
-	if it were big-endian. It also always uses lowercase letters.
-]=]
-local function to_hex_string(u64: vector): string
-	local most, least = to_pair(u64)
-	return string.format("%08x%08x", most, least)
-end
-
---[=[
-	Converts the provided `u64` to a string of 64 binary digits.
-
-	The returned string will always be 64 bytes and the number is formatted as
-	if it were big-endian.
-]=]
-local function to_bin_string(u64: vector): string
-	-- horrible, inefficent, terrible.
-	return (string.gsub(to_hex_string(u64), "(.)", HEX_TO_BINARY))
 end
 
 --[=[
@@ -447,6 +328,44 @@ local function lt_equal(lhs: vector, rhs: vector): boolean
 end
 
 --[=[
+	Calculates the quotient of the two provided values and returns it,
+	along with the remainder from that operation.
+
+	This function operates on a single 64-bit integer and a 32-bit integer.
+	For dividing two 64-bit integers, see `div`.
+	
+	Equivalent to `//` for normal integers.
+	This function will error if `divisor` is 0.
+]=]
+local function div_32(dividend: vector, divisor: number): (vector, number)
+	if divisor == 0 then
+		error("cannot divide integers by zero")
+	end
+	local hi, lo = to_pair(dividend)
+	local q_hi, q_lo = 0, 0
+	local rem = 0
+
+	for i = 31, 0, -1 do
+		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(hi, i), 1))
+
+		if rem >= divisor then
+			rem -= divisor
+			q_hi = bit32.bor(q_hi, bit32.lshift(1, i))
+		end
+	end
+	for i = 31, 0, -1 do
+		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(lo, i), 1))
+
+		if rem >= divisor then
+			rem -= divisor
+			q_lo = bit32.bor(q_lo, bit32.lshift(1, i))
+		end
+	end
+
+	return from_pair(q_hi, q_lo), rem
+end
+
+--[=[
 	Calculates the sum of the two provided values. Equivalent to `+` for
 	normal integers.
 	
@@ -548,9 +467,9 @@ local function mult(lhs: vector, rhs: vector): vector
 end
 
 --[=[
-	Calculates the product of the two provided values. Equivalent to `//` for
-	normal integers. 
-	
+	Calculates the quotient of the two provided values and returns it.
+
+	Equivalent to `//` for normal integers.
 	This function will error if `rhs` is 0.
 ]=]
 local function div(lhs: vector, rhs: vector): vector
@@ -614,29 +533,123 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
-local function div_32(dividend: vector, divisor: number): (vector, number)
-	local hi, lo = to_pair(dividend)
-	local q_hi, q_lo = 0, 0
-	local rem = 0
+--[=[
+	Reads a `u64` from the provided buffer. If offset is provided, reads from
+	that spot in the buffer. Otherwise, reads from the beginning.
 
-	for i = 31, 0, -1 do
-		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(hi, i), 1))
+	This function reads a little-endian value from the buffer.
+]=]
+local function from_buffer(buf: buffer, offset: number?): vector
+	offset = offset or 0
+	local least = buffer.readu32(buf, offset :: number)
+	local most = buffer.readu32(buf, offset :: number + 4)
 
-		if rem >= divisor then
-			rem -= divisor
-			q_hi = bit32.bor(q_hi, bit32.lshift(1, i))
+	return from_pair(most, least)
+end
+
+--[=[
+	Reads a `u64` from the provided string. If offset is provided, reads from
+	that point in the string. Otherwise starts at the beginning.
+
+	This function reads a little-endian value from the string.
+]=]
+local function from_string(str: string, offset: number?): vector
+	offset = offset or 1
+	-- This is deliberately backwards because we expect a little endian input
+	local d, c, b, a, h, g, f, e = string.byte(str, offset, offset :: number + 7)
+	local least = bit32.bor(bit32.lshift(bit32.replace(b, a, 8, 8), 16), bit32.replace(d, c, 8, 8))
+	local most = bit32.bor(bit32.lshift(bit32.replace(f, e, 8, 8), 16), bit32.replace(h, g, 8, 8))
+
+	return from_pair(most, least)
+end
+
+--[=[
+	Converts the provided `u64` to a buffer.
+
+	The integer is written as a little-endian value.
+]=]
+local function to_buffer(u64: vector): buffer
+	local most, least = to_pair(u64)
+	local buf = buffer.create(8)
+	-- We use a little endian format because it doesn't matter and most
+	-- systems we run on are little endian so it'll be nicer for them.
+	buffer.writeu32(buf, 0, least)
+	buffer.writeu32(buf, 4, most)
+	return buf
+end
+
+--[=[
+	Writes the provided `u64` to the provided buffer. The value is written
+	to the buffer at the provided offset.
+
+	The integer is written as a little-endian value.
+]=]
+local function write_to_buffer(b: buffer, u64: vector, offset: number)
+	local most, least = to_pair(u64)
+	buffer.writeu32(b, offset, least)
+	buffer.writeu32(b, offset + 4, most)
+end
+
+--[=[
+	Converts the provided `u64` to string of binary data.
+
+	The integer is written as if it were little-endian.
+]=]
+local function to_string(u64: vector): string
+	local most, least = to_pair(u64)
+	-- Previous implementation of this used `%c` but it turns out that
+	-- `string.format("%c", 0)` results in a zero length string!
+	return string.char(
+		bit32.band(least, 0xFF),
+		bit32.extract(least, 8, 8),
+		bit32.extract(least, 16, 8),
+		bit32.rshift(least, 24),
+		bit32.band(most, 0xFF),
+		bit32.extract(most, 8, 8),
+		bit32.extract(most, 16, 8),
+		bit32.rshift(most, 24)
+	)
+end
+
+--[=[
+	Converts the provided `u64` to a string of 16 hexadecimal digits.
+
+	The returned string will always be 16 bytes and the number is formatted as
+	if it were big-endian. It also always uses lowercase letters.
+]=]
+local function to_hex_string(u64: vector): string
+	local most, least = to_pair(u64)
+	return string.format("%08x%08x", most, least)
+end
+
+--[=[
+	Converts the provided `u64` to a string of 64 binary digits.
+
+	The returned string will always be 64 bytes and the number is formatted as
+	if it were big-endian.
+]=]
+local function to_bin_string(u64: vector): string
+	-- horrible, inefficent, terrible.
+	return (string.gsub(to_hex_string(u64), "(.)", HEX_TO_BINARY))
+end
+
+local function from_decimal_string(str: string): vector
+	local low, high = 0, 0
+	for i = 1, #str do
+		-- The ascii code for zero is `48`.
+		local digit = string.byte(str, i, i) - 48
+
+		low *= 10
+		high = high * 10 + low // 2 ^ 32
+		low = bit32.bor(low, 0) + digit
+
+		if low >= 2 ^ 32 then
+			low -= 2 ^ 32
+			high += 1
 		end
 	end
-	for i = 31, 0, -1 do
-		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(lo, i), 1))
 
-		if rem >= divisor then
-			rem -= divisor
-			q_lo = bit32.bor(q_lo, bit32.lshift(1, i))
-		end
-	end
-
-	return from_pair(q_hi, q_lo), rem
+	return from_pair(high, low)
 end
 
 local function to_decimal_string(n: vector): string
@@ -675,22 +688,10 @@ return {
 	from_pair = from_pair,
 	from_u32 = from_u32,
 	from_f64 = from_f64,
-	from_string = from_string,
-	from_buffer = from_buffer,
-
-	from_decimal_string = from_decimal_string,
-
-	to_decimal_string = to_decimal_string,
 
 	to_pair = to_pair,
 	to_quartet = to_quartet,
 	to_f64 = to_f64,
-
-	to_string = to_string,
-	to_buffer = to_buffer,
-	write_to_buffer = write_to_buffer,
-	to_hex_string = to_hex_string,
-	to_bin_string = to_bin_string,
 
 	lt = lt,
 	lt_equal = lt_equal,
@@ -720,4 +721,17 @@ return {
 	div = div,
 	mod = mod,
 	pow = pow,
+
+	to_string = to_string,
+	from_string = from_string,
+
+	to_buffer = to_buffer,
+	write_to_buffer = write_to_buffer,
+	from_buffer = from_buffer,
+
+	to_hex_string = to_hex_string,
+	to_bin_string = to_bin_string,
+
+	to_decimal_string = to_decimal_string,
+	from_decimal_string = from_decimal_string,
 }
