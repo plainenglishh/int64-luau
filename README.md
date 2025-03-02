@@ -22,10 +22,9 @@ If you wish to contribute to this module, whether it be through optimizations or
 | [`from_decimal_string`](#from_decimal_string) | [`to_decimal_string`](#to_decimal_string) | [`ONE`](#ONE)         |
 | [`from_pair`](#from_pair)                     | [`to_pair`](#to_pair)                     | [`TWO`](#TWO)         |
 | [`from_u32`](#from_u32)                       | [`to_quartet`](#to_quartet)               | [`MAX`](#MAX)         |
-| [`from_buffer`](#from_buffer)                 | [`to_f64`](#to_f64)                       | [`MAX_U32`](#MAX_U32) |
-| [`from_string`](#from_string)                 | [`to_buffer`](#to_buffer)                 | [`MAX_F64`](#MAX_F64) |
-|                                               | [`write_to_buffer`](#write_to_buffer)     | [`MAX_F32`](#MAX_F32) |
-|                                               | [`to_string`](#to_string)                 |                       |
+| [`from_buffer`](#from_buffer)                 | [`to_buffer`](#to_buffer)                 | [`MAX_U32`](#MAX_U32) |
+| [`from_string`](#from_string)                 | [`write_to_buffer`](#write_to_buffer)     | [`MAX_F64`](#MAX_F64) |
+|                                               | [`to_string`](#to_string)                 | [`MAX_F32`](#MAX_F32) |
 |                                               | [`to_hex_string`](#to_hex_string)         |                       |
 |                                               | [`to_bin_string`](#to_bin_string)         |                       |
 
@@ -150,16 +149,6 @@ int64.to_quartet(u64: vector): (number, number, number, number)
 Converts the provided `u64` into four 16-bit integers.
 
 This returns the most significant portion of the number first.
-
-#### `to_f64`
-
-```luau
-int64.to_f64(u64: vector): number
-```
-
-Converts the provided `u64` to an `f64` (or put plainly: a normal Luau number).
-
-This function does not check for precision loss. `f64` values lose precision past `2 ^ 53`.
 
 #### `to_buffer`
 
