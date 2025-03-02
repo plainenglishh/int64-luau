@@ -43,7 +43,7 @@ end
 	the max value.
 ]=]
 local function from_u32(u32: number): vector
-	return from_pair(0, u32) -- TODO: efficiency
+	return vector.create(0, bit32.rshift(u32, 22), bit32.band(u32, 0b1111_1111_1111_1111_1111_11))
 end
 
 --[=[
