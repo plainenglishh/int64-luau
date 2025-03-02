@@ -633,7 +633,21 @@ local function to_bin_string(u64: vector): string
 	return (string.gsub(to_hex_string(u64), "(.)", HEX_TO_BINARY))
 end
 
+--[=[
+	Returns the provided value parsed as a 64-bit integer. Expects the provided
+	string to contain only the digits 0-9 and will error if it does not.
+	
+	Leading zeros are accepted and parsed appropriately.
+
+	Due to the implementation, the resulting integer will wrap around if it is
+	too large to fit in a 64-bit integer rather than erroring.
+]=]
 local function from_decimal_string(str: string): vector
+	if string.find(str, "%D") then
+		local pos, digit = string.match(str, "()(%D)")
+		local hex = string.format("0x%02x", string.byte(digit :: any))
+		error(`unexpected character '{digit}' ({hex}) at position {pos} while parsing decimal string`)
+	end
 	local low, high = 0, 0
 	for i = 1, #str do
 		-- The ascii code for zero is `48`.
@@ -652,6 +666,12 @@ local function from_decimal_string(str: string): vector
 	return from_pair(high, low)
 end
 
+--[=[
+	Returns the provided value as a string of decimal digits.
+	
+	Equivalent to formatting normal numbers with `%u` or
+	calling `tostring` on them.
+]=]
 local function to_decimal_string(n: vector): string
 	if countlz(n) >= 11 then
 		return tostring(to_f64(n))
