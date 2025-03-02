@@ -9,13 +9,24 @@ local HEX_TO_BINARY = {
     ["c"] = "1100", ["d"] = "1101", ["e"] = "1110", ["f"] = "1111",
 }
 
+--- A constant representing the 64-bit representation of `0`.
 local ZERO = vector.create(0, 0, 0)
+--- A constant representating the 64-bit representation of `1`.
 local ONE = vector.create(0, 0, 1)
+--- A constant representating the 64-bit representation of `2`.
 local TWO = vector.create(0, 0, 2)
 
+--- A constant representing the maximum possible 64-bit value
+--- (`18446744073709551615`, or `2 ^ 64 - 1`)
 local MAX = vector.create(0x3fffff, 0xfffff, 0x3fffff)
+--- A constant representing the maximum possible 32-bit value
+--- (`4294967295`, or `2 ^ 32 - 1`).
 local MAX_U32 = vector.create(0, 0x3ff, 0x3fffff)
+--- A constant representing the maximum integer that is exactly representable
+--- by a normal Luau number (`9007199254740992` or `2 ^ 53`).
 local MAX_F64 = vector.create(0x7ff, 0xfffff, 0x3fffff)
+--- A constant representing the maximum integer that is exactly representable
+--- by a 32-bit floating point value (`16777216`, or `2 ^ 24`).
 local MAX_F32 = vector.create(0, 1, 0x3fffff)
 
 --[=[
@@ -48,9 +59,10 @@ end
 
 --[=[
 	Constructs a 64-bit integer from the passed `f64`.
+	Put more plainly, converts a normal Luau number to a 64-bit integer.
 
 	The number is truncated into an integer first. Note that Luau numbers
-	cannot accurately represent integers past 2 ^ 53.
+	cannot accurately represent integers past `2 ^ 53`.
 ]=]
 local function from_f64(f64: number): vector
 	return from_pair(bit32.bor(f64 // 2 ^ 32), bit32.bor(f64 % 2 ^ 32))
@@ -94,8 +106,8 @@ end
 	Converts the provided `u64` to an `f64` (or put plainly: a normal Luau
 	number).
 
-	This function does not check for precision loss. f64 values lose precision
-	past 2 ^ 53.
+	This function does not check for precision loss. `f64` values lose precision
+	past `2 ^ 53`.
 ]=]
 local function to_f64(u64: vector): number
 	local most, least = to_pair(u64)
@@ -369,7 +381,7 @@ end
 	Calculates the sum of the two provided values. Equivalent to `+` for
 	normal integers.
 	
-	If the sum is equal to or greater than 2^64, the returned value will
+	If the sum is equal to or greater than `2 ^ 64`, the returned value will
 	overflow rather than expanding beyond 64 bits.
 ]=]
 local function add(augend: vector, addend: vector): vector
@@ -384,7 +396,7 @@ end
 	Calculates the difference of the two provided values. Equivalent to `-` for
 	normal integers.
 	
-	If the difference is less than 0, the returned value will overflow rather
+	If the difference is less than `0`, the returned value will overflow rather
 	than going negative.
 ]=]
 local function sub(minuend: vector, subtrahend: vector): vector
@@ -422,8 +434,8 @@ end
 	Calculates the product of the two provided values. Equivalent to `*` for
 	normal integers.
 	
-	If the product is greater than or equal to 2^64, the returned value will
-	overflow rather than expanding beyond 64-bits.
+	If the product is greater than or equal to `2 ^ 64`, the returned value will
+	overflow rather than expanding beyond 64 bits.
 ]=]
 local function mult(multiplier: vector, multiplicand: vector): vector
 	-- We represent 64-bit numbers as two 32-bit ones.
@@ -470,7 +482,7 @@ end
 	Calculates the quotient of the two provided values and returns it.
 
 	Equivalent to `//` for normal integers.
-	This function will error if `divisor` is 0.
+	This function will error if `divisor` is `0`.
 ]=]
 local function div(dividend: vector, divisor: vector): vector
 	-- TODO: Do we want to return the remainder?
@@ -502,7 +514,7 @@ end
 	Calculates the modulo of the two provided values. Equivalent to `%` for
 	normal integers.
 	
-	This function will error if `divisor` is 0.
+	This function will error if `divisor` is `0`.
 ]=]
 local function mod(dividend: vector, divisor: vector): vector
 	if divisor == ZERO then
@@ -516,8 +528,8 @@ end
 	Calculates the result of `base` raised to `power`. Equivalent to `^` for
 	normal integers. `power` is interpreted as a 32-bit integer.
 
-	If the result is greater than or equal to 2^64, the returned value will
-	overflow rather than expanding beyond 64-bits.
+	If the result is greater than or equal to `2 ^ 64`, the returned value will
+	overflow rather than expanding beyond 64 bits.
 	
 	Additionally, `0 ^ 0` is treated as being `1`.
 ]=]
@@ -690,19 +702,23 @@ end
 -- TODO: vararg versions of band, bor, bxor
 
 return {
-	--- The number `0`.
+	--- A constant representing the 64-bit representation of `0`.
 	ZERO = ZERO,
-	--- The number `1`.
+	--- A constant representating the 64-bit representation of `1`.
 	ONE = ONE,
-	--- The number `2`.
+	--- A constant representating the 64-bit representation of `2`.
 	TWO = TWO,
-	--- The maximum value of a `u64` (2 ^ 64 - 1).
+	--- A constant representing the maximum possible 64-bit value
+	--- (`18446744073709551615`, or `2 ^ 64 - 1`)
 	MAX = MAX,
-	--- The maximum value of a `u32` (2 ^ 32 - 1).
+	--- A constant representing the maximum possible 32-bit value
+	--- (`4294967295`, or `2 ^ 32 - 1`).
 	MAX_U32 = MAX_U32,
-	--- The maximum supported integer value for an `f64` (2 ^ 53 - 1).
+	--- A constant representing the maximum integer that is exactly representable
+	--- by a normal Luau number (`9007199254740992` or `2 ^ 53`).
 	MAX_F64 = MAX_F64,
-	--- The maximum supported integer value for an `f32` (2 ^ 23 - 1).
+	--- A constant representing the maximum integer that is exactly representable
+	--- by a 32-bit floating point value (`16777216`, or `2 ^ 24`).
 	MAX_F32 = MAX_F32,
 
 	from_pair = from_pair,
