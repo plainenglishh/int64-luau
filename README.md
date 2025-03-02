@@ -16,33 +16,33 @@ If you wish to contribute to this module, whether it be through optimizations or
 
 ## API
 
-| Constructors                                  | Deconstructors                            | Constants             |
-| :-------------------------------------------- | :---------------------------------------- | :-------------------- |
-| [`from_f64`](#from_f64)                       | [`to_f64`](#to_f64)                       | [`ZERO`](#ZERO)       |
-| [`from_decimal_string`](#from_decimal_string) | [`to_decimal_string`](#to_decimal_string) | [`ONE`](#ONE)         |
-| [`from_pair`](#from_pair)                     | [`to_pair`](#to_pair)                     | [`TWO`](#TWO)         |
-| [`from_u32`](#from_u32)                       | [`to_quartet`](#to_quartet)               | [`MAX`](#MAX)         |
-| [`from_buffer`](#from_buffer)                 | [`to_buffer`](#to_buffer)                 | [`MAX_U32`](#MAX_U32) |
-| [`from_string`](#from_string)                 | [`write_to_buffer`](#write_to_buffer)     | [`MAX_F64`](#MAX_F64) |
-|                                               | [`to_string`](#to_string)                 | [`MAX_F32`](#MAX_F32) |
-|                                               | [`to_hex_string`](#to_hex_string)         |                       |
-|                                               | [`to_bin_string`](#to_bin_string)         |                       |
+| [Constructors](#constructors)                 | [Destructors](#destructors)               | [Constants](#constants) |
+| :-------------------------------------------- | :---------------------------------------- | :---------------------- |
+| [`from_f64`](#from_f64)                       | [`to_f64`](#to_f64)                       | [`ZERO`](#ZERO)         |
+| [`from_decimal_string`](#from_decimal_string) | [`to_decimal_string`](#to_decimal_string) | [`ONE`](#ONE)           |
+| [`from_pair`](#from_pair)                     | [`to_pair`](#to_pair)                     | [`TWO`](#TWO)           |
+| [`from_u32`](#from_u32)                       | [`to_quartet`](#to_quartet)               | [`MAX`](#MAX)           |
+| [`from_buffer`](#from_buffer)                 | [`to_buffer`](#to_buffer)                 | [`MAX_U32`](#MAX_U32)   |
+| [`from_string`](#from_string)                 | [`write_to_buffer`](#write_to_buffer)     | [`MAX_F64`](#MAX_F64)   |
+|                                               | [`to_string`](#to_string)                 | [`MAX_F32`](#MAX_F32)   |
+|                                               | [`to_hex_string`](#to_hex_string)         |                         |
+|                                               | [`to_bin_string`](#to_bin_string)         |                         |
 
-| Logical                 | Arithmetic      | Bitwise                 |
-| :---------------------- | :-------------- | :---------------------- |
-| [`gt`](#gt)             | [`add`](#add)   | [`band`](#band)         |
-| [`gt_equal`](#gt_equal) | [`sub`](#sub)   | [`bor`](#bor)           |
-| [`lt`](#lt)             | [`mult`](#mult) | [`bxor`](#bxor)         |
-| [`lt_equal`](#lt_equal) | [`div`](#div)   | [`bnot`](#bnot)         |
-|                         | [`mod`](#mod)   | [`lshift`](#lshift)     |
-|                         | [`pow`](#pow)   | [`rshift`](#rshift)     |
-|                         |                 | [`arshift`](#arshift)   |
-|                         |                 | [`lrotate`](#lrotate)   |
-|                         |                 | [`rrotate`](#rrotate)   |
-|                         |                 | [`countlz`](#countlz)   |
-|                         |                 | [`countrz`](#countrz)   |
-|                         |                 | [`btest`](#btest)       |
-|                         |                 | [`byteswap`](#byteswap) |
+| [Logical](#logical)     | [Arithmetic](#arithmetic) | [Bitwise](#bitwise)     |
+| :---------------------- | :------------------------ | :---------------------- |
+| [`gt`](#gt)             | [`add`](#add)             | [`band`](#band)         |
+| [`gt_equal`](#gt_equal) | [`sub`](#sub)             | [`bor`](#bor)           |
+| [`lt`](#lt)             | [`mult`](#mult)           | [`bxor`](#bxor)         |
+| [`lt_equal`](#lt_equal) | [`div`](#div)             | [`bnot`](#bnot)         |
+|                         | [`mod`](#mod)             | [`lshift`](#lshift)     |
+|                         | [`pow`](#pow)             | [`rshift`](#rshift)     |
+|                         |                           | [`arshift`](#arshift)   |
+|                         |                           | [`lrotate`](#lrotate)   |
+|                         |                           | [`rrotate`](#rrotate)   |
+|                         |                           | [`countlz`](#countlz)   |
+|                         |                           | [`countrz`](#countrz)   |
+|                         |                           | [`btest`](#btest)       |
+|                         |                           | [`byteswap`](#byteswap) |
 
 ### Constructors
 
