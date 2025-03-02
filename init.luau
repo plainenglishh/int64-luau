@@ -30,6 +30,18 @@ local MAX_F64 = vector.create(0x800, 0, 0)
 local MAX_F32 = vector.create(0, 4, 0)
 
 --[=[
+	Normalizes a vector, trimming off any bits that would interfere with
+	the library's functionality.
+]=]
+local function normalize(u64: vector): vector
+	return vector.create(
+		bit32.band(u64.x, 0b1111_1111_1111_1111_1111_11),
+		bit32.band(u64.y, 0b1111_1111_1111_1111_1111),
+		bit32.band(u64.z, 0b1111_1111_1111_1111_1111_11)
+	)
+end
+
+--[=[
 	Constructs a 64-bit integer from the passed `u32` values.
 	
 	The provided `most` value fills the upper 32 bits of the integer,
@@ -389,7 +401,7 @@ local function add(augend: vector, addend: vector): vector
 
 	prime += vector.create(if prime.y > (2 ^ 20 - 1) then 1 else 0, if prime.z > (2 ^ 22 - 1) then 1 else 0, 0)
 
-	return prime
+	return normalize(prime)
 end
 
 --[=[
