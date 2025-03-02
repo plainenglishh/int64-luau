@@ -24,13 +24,13 @@ assert(int64.MAX_U32.x == 0, "int64.MAX_U32 x component was wrong")
 assert(int64.MAX_U32.y == 2 ^ 10 - 1, "int64.MAX_U32 y component was wrong")
 assert(int64.MAX_U32.z == 2 ^ 22 - 1, "int64.MAX_U32 z component was wrong")
 
-assert(int64.MAX_F64.x == 2 ^ 11 - 1, "int64.MAX_F64 x component was wrong")
-assert(int64.MAX_F64.y == 2 ^ 20 - 1, "int64.MAX_F64 y component was wrong")
-assert(int64.MAX_F64.z == 2 ^ 22 - 1, "int64.MAX_F64 z component was wrong")
+assert(int64.MAX_F64.x == 0b0000000000100000000000, "int64.MAX_F64 x component was wrong")
+assert(int64.MAX_F64.y == 0b00000000000000000000, "int64.MAX_F64 y component was wrong")
+assert(int64.MAX_F64.z == 0b0000000000000000000000, "int64.MAX_F64 z component was wrong")
 
-assert(int64.MAX_F32.x == 0, "int64.MAX_F32 x component was wrong")
-assert(int64.MAX_F32.y == 1, "int64.MAX_F32 y component was wrong")
-assert(int64.MAX_F32.z == 2 ^ 22 - 1, "int64.MAX_F32 z component was wrong")
+assert(int64.MAX_F32.x == 0b0000000000000000000000, "int64.MAX_F32 x component was wrong")
+assert(int64.MAX_F32.y == 0b00000000000000000100, "int64.MAX_F32 y component was wrong")
+assert(int64.MAX_F32.z == 0b0000000000000000000000, "int64.MAX_F32 z component was wrong")
 
 -- Constructors
 
@@ -559,5 +559,13 @@ for i = 0, 63 do
 	)
 	assert(int64.to_decimal_string(pow_2) == expected, `to_decimal_string was wrong for '{expected}`)
 end
+
+assert(int64.to_decimal_string(int64.ZERO) == "0", "to_decimal_string was wrong for ZERO")
+assert(int64.to_decimal_string(int64.ONE) == "1", "to_decimal_string was wrong for ONE")
+assert(int64.to_decimal_string(int64.TWO) == "2", "to_decimal_string was wrong for TWO")
+assert(int64.to_decimal_string(int64.MAX) == "18446744073709551615", "to_decimal_string was wrong for MAX")
+assert(int64.to_decimal_string(int64.MAX_U32) == "4294967295", "to_decimal_string was wrong for MAX_U32")
+assert(int64.to_decimal_string(int64.MAX_F64) == "9007199254740992", "to_decimal_string was wrong for MAX_F64")
+assert(int64.to_decimal_string(int64.MAX_F32) == "16777216", "to_decimal_string was wrong for MAX_F32")
 
 return {}

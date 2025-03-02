@@ -24,10 +24,10 @@ local MAX = vector.create(0x3fffff, 0xfffff, 0x3fffff)
 local MAX_U32 = vector.create(0, 0x3ff, 0x3fffff)
 --- A constant representing the maximum integer that is exactly representable
 --- by a normal Luau number (`9007199254740992` or `2 ^ 53`).
-local MAX_F64 = vector.create(0x7ff, 0xfffff, 0x3fffff)
+local MAX_F64 = vector.create(0x800, 0, 0)
 --- A constant representing the maximum integer that is exactly representable
 --- by a 32-bit floating point value (`16777216`, or `2 ^ 24`).
-local MAX_F32 = vector.create(0, 1, 0x3fffff)
+local MAX_F32 = vector.create(0, 4, 0)
 
 --[=[
 	Constructs a 64-bit integer from the passed `u32` values.
