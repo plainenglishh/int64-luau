@@ -614,8 +614,46 @@ local function pow(base: vector, power: number): vector
 	end
 end
 
+local function div_32(dividend: vector, divisor: number): (vector, number)
+	local hi, lo = to_pair(dividend)
+	local q_hi, q_lo = 0, 0
+	local rem = 0
+
+	for i = 31, 0, -1 do
+		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(hi, i), 1))
+
+		if rem >= divisor then
+			rem -= divisor
+			q_hi = bit32.bor(q_hi, bit32.lshift(1, i))
+		end
+	end
+	for i = 31, 0, -1 do
+		rem = bit32.bor(bit32.lshift(rem, 1), bit32.band(bit32.rshift(lo, i), 1))
+
+		if rem >= divisor then
+			rem -= divisor
+			q_lo = bit32.bor(q_lo, bit32.lshift(1, i))
+		end
+	end
+
+	return from_pair(q_hi, q_lo), rem
+end
+
+local function to_decimal_string(n: vector): string
+	if countlz(n) >= 11 then
+		return tostring(to_f64(n))
+	else
+		local q, rem = div_32(n, 1e9)
+		local q_hi, q_lo = to_pair(q)
+		if q_hi == 0 and q_lo < 1e9 then
+			return string.format("%u%09u", q_lo, rem)
+		else
+			return string.format("%s%09u", to_decimal_string(q), rem)
+		end
+	end
+end
+
 -- TODO: replace and extract
--- TODO: to_decimal_string
 -- TODO: vararg versions of band, bor, bxor
 
 return {
@@ -641,6 +679,8 @@ return {
 	from_buffer = from_buffer,
 
 	from_decimal_string = from_decimal_string,
+
+	to_decimal_string = to_decimal_string,
 
 	to_pair = to_pair,
 	to_quartet = to_quartet,

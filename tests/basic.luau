@@ -497,4 +497,67 @@ assert(int64.to_hex_string(from_decimal_string_9) == "0000000000000001", "from_d
 local from_decimal_string_10 = int64.from_decimal_string("18446744078004518911")
 assert(int64.to_hex_string(from_decimal_string_10) == "00000000ffffffff", "from_decimal_string_10 parsed wrong")
 
+local to_decimal_string_1 = int64.to_decimal_string(from_decimal_string_1)
+assert(to_decimal_string_1 == "0", "to_decimal_string was wrong for '0'")
+
+local to_decimal_string_2 = int64.to_decimal_string(from_decimal_string_2)
+assert(to_decimal_string_2 == "42", "to_decimal_string was wrong for '42'")
+
+local to_decimal_string_3 = int64.to_decimal_string(from_decimal_string_3)
+assert(to_decimal_string_3 == "4294967295", "to_decimal_string was wrong for '4294967295'")
+
+local to_decimal_string_4 = int64.to_decimal_string(from_decimal_string_4)
+assert(to_decimal_string_4 == "4294967296", "to_decimal_string was wrong for '4294967296'")
+
+local to_decimal_string_5 = int64.to_decimal_string(from_decimal_string_5)
+assert(to_decimal_string_5 == "9007199254740991", "to_decimal_string was wrong for '9007199254740991'")
+
+local to_decimal_string_6 = int64.to_decimal_string(from_decimal_string_6)
+assert(to_decimal_string_6 == "18446744073709551615", "to_decimal_string was wrong for '18446744073709551615'")
+
+local to_decimal_string_7 = int64.to_decimal_string(from_decimal_string_7)
+assert(to_decimal_string_7 == "12345678901234567890", "to_decimal_string was wrong for '12345678901234567890'")
+
+local to_decimal_string_8 = int64.to_decimal_string(from_decimal_string_8)
+assert(to_decimal_string_8 == "18446744073709551557", "to_decimal_string was wrong for '18446744073709551557'")
+
+-- from_decimal_string_9 and 10 are testing overflow and leading zeros, which we don't want.
+-- but we do need to test more values above 2 ^ 53
+
+local to_decimal_string_9 = int64.to_decimal_string(int64.from_pair(0xaaaaaaaa, 0xaaaaaaaa))
+assert(to_decimal_string_9 == "12297829382473034410", "to_decimal_string was wrong for '12297829382473034410'")
+
+local to_decimal_string_10 = int64.to_decimal_string(int64.from_pair(0x55555555, 0x55555555))
+assert(to_decimal_string_10 == "6148914691236517205", "to_decimal_string was wrong for '6148914691236517205'")
+
+local to_decimal_string_11 = int64.to_decimal_string(int64.from_pair(0x00200000, 0x00000000))
+assert(to_decimal_string_11 == "9007199254740992", "to_decimal_string was wrong for '9007199254740992'")
+
+local to_decimal_string_12 = int64.to_decimal_string(int64.from_pair(0x001fffff, 0xfffffffe))
+assert(to_decimal_string_12 == "9007199254740990", "to_decimal_string was wrong for '9007199254740990'")
+
+--stylua: ignore
+local two_pows_above_53 = {
+	[54] = "18014398509481984",
+	[55] = "36028797018963968",
+	[56] = "72057594037927936",
+	[57] = "144115188075855872",
+	[58] = "288230376151711744",
+	[59] = "576460752303423488",
+	[60] = "1152921504606846976",
+	[61] = "2305843009213693952",
+	[62] = "4611686018427387904",
+	[63] = "9223372036854775808",
+}
+
+for i = 0, 63 do
+	local expected = two_pows_above_53[i] or tostring(2 ^ i)
+	local pow_2 = int64.from_decimal_string(expected)
+	assert(
+		int64.to_bin_string(pow_2) == string.rep("0", 63 - i) .. "1" .. string.rep("0", i),
+		`from_decimal_string parsed '{expected}' wrong`
+	)
+	assert(int64.to_decimal_string(pow_2) == expected, `to_decimal_string was wrong for '{expected}`)
+end
+
 return {}
