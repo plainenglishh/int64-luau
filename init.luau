@@ -372,8 +372,8 @@ end
 	If the sum is equal to or greater than 2^64, the returned value will
 	overflow rather than expanding beyond 64 bits.
 ]=]
-local function add(lhs: vector, rhs: vector): vector
-	local prime = lhs + rhs
+local function add(augend: vector, addend: vector): vector
+	local prime = augend + addend
 
 	prime += vector.create(if prime.y > (2 ^ 20 - 1) then 1 else 0, if prime.z > (2 ^ 22 - 1) then 1 else 0, 0)
 
@@ -387,8 +387,8 @@ end
 	If the difference is less than 0, the returned value will overflow rather
 	than going negative.
 ]=]
-local function sub(lhs: vector, rhs: vector): vector
-	local prime = lhs - rhs
+local function sub(minuend: vector, subtrahend: vector): vector
+	local prime = minuend - subtrahend
 
 	local adjust_z = prime.z
 	local adjust_y = prime.y
@@ -425,7 +425,7 @@ end
 	If the product is greater than or equal to 2^64, the returned value will
 	overflow rather than expanding beyond 64-bits.
 ]=]
-local function mult(lhs: vector, rhs: vector): vector
+local function mult(multiplier: vector, multiplicand: vector): vector
 	-- We represent 64-bit numbers as two 32-bit ones.
 	-- Multiplying them is:
 	-- (A + B) * (C + D) = (A * C) + (A * D) + (B * C) + (B * D)
@@ -444,8 +444,8 @@ local function mult(lhs: vector, rhs: vector): vector
 	-- you end up with e.g. (A * 2 ^ 48 * E * 2 ^ 48) which is A * E * 2^96.
 	-- Otherwise... Here we go.
 
-	local a, b, c, d = to_quartet(lhs)
-	local e, f, g, h = to_quartet(rhs)
+	local a, b, c, d = to_quartet(multiplier)
+	local e, f, g, h = to_quartet(multiplicand)
 
 	local product_4 = d * h
 	local product_3 = bit32.rshift(product_4, 16) + c * h
@@ -470,24 +470,24 @@ end
 	Calculates the quotient of the two provided values and returns it.
 
 	Equivalent to `//` for normal integers.
-	This function will error if `rhs` is 0.
+	This function will error if `divisor` is 0.
 ]=]
-local function div(lhs: vector, rhs: vector): vector
+local function div(dividend: vector, divisor: vector): vector
 	-- TODO: Do we want to return the remainder?
-	if is_zero(rhs) then
+	if is_zero(divisor) then
 		error("cannot divide integers by zero")
-	elseif countlz(lhs) >= 11 and countlz(rhs) >= 11 then
-		local l_real = to_f64(lhs)
-		local r_real = to_f64(rhs)
+	elseif countlz(dividend) >= 11 and countlz(divisor) >= 11 then
+		local l_real = to_f64(dividend)
+		local r_real = to_f64(divisor)
 		return from_f64(l_real / r_real)
 	end
 
 	local quotient = ZERO
-	local remainder = lhs
+	local remainder = dividend
 
 	-- Doing extra iterations of this is very bad!
-	for i = math.abs(countlz(lhs) - countlz(rhs)), 0, -1 do
-		local shifted_divisor = lshift(rhs, i)
+	for i = math.abs(countlz(dividend) - countlz(divisor)), 0, -1 do
+		local shifted_divisor = lshift(divisor, i)
 
 		if gt_equal(remainder, shifted_divisor) then
 			remainder = sub(remainder, shifted_divisor)
@@ -502,14 +502,14 @@ end
 	Calculates the modulo of the two provided values. Equivalent to `%` for
 	normal integers.
 	
-	This function will error if `rhs` is 0.
+	This function will error if `divisor` is 0.
 ]=]
-local function mod(lhs: vector, rhs: vector): vector
-	if rhs == ZERO then
+local function mod(dividend: vector, divisor: vector): vector
+	if divisor == ZERO then
 		error("cannot divide integers by 0")
 	end
 
-	return sub(lhs, mult(div(lhs, rhs), rhs))
+	return sub(dividend, mult(div(dividend, divisor), divisor))
 end
 
 --[=[
@@ -672,11 +672,11 @@ end
 	Equivalent to formatting normal numbers with `%u` or
 	calling `tostring` on them.
 ]=]
-local function to_decimal_string(n: vector): string
-	if countlz(n) >= 11 then
-		return tostring(to_f64(n))
+local function to_decimal_string(u64: vector): string
+	if countlz(u64) >= 11 then
+		return tostring(to_f64(u64))
 	else
-		local q, rem = div_32(n, 1e9)
+		local q, rem = div_32(u64, 1e9)
 		local q_hi, q_lo = to_pair(q)
 		if q_hi == 0 and q_lo < 1e9 then
 			return string.format("%u%09u", q_lo, rem)
