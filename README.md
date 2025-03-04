@@ -299,12 +299,13 @@ If the product is greater than or equal to `2 ^ 64`, the returned value will ove
 #### `div`
 
 ```luau
-int64.div(dividend: vector, divisor: vector): vector
+int64.div(dividend: vector, divisor: vector): (vector, vector)
 ```
 
-Calculates the quotient of the two provided values and returns it.
+Calculates the quotient of the two provided values and returns it, along with the remainder.
 
-Equivalent to `//` for normal integers. This function will error if `divisor` is `0`.
+Equivalent to `//` and `%` for normal integers.
+This function will error if `divisor` is `0`.
 
 #### `mod`
 

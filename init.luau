@@ -491,19 +491,19 @@ local function mult(multiplier: vector, multiplicand: vector): vector
 end
 
 --[=[
-	Calculates the quotient of the two provided values and returns it.
+	Calculates the quotient of the two provided values and returns it, along
+	with the remainder.
 
-	Equivalent to `//` for normal integers.
+	Equivalent to `//` and `%` for normal integers.
 	This function will error if `divisor` is `0`.
 ]=]
-local function div(dividend: vector, divisor: vector): vector
-	-- TODO: Do we want to return the remainder?
+local function div(dividend: vector, divisor: vector): (vector, vector)
 	if is_zero(divisor) then
 		error("cannot divide integers by zero")
 	elseif countlz(dividend) >= 11 and countlz(divisor) >= 11 then
 		local l_real = to_f64(dividend)
 		local r_real = to_f64(divisor)
-		return from_f64(l_real / r_real)
+		return from_f64(l_real // r_real), from_f64(l_real % r_real)
 	end
 
 	local quotient = ZERO
@@ -519,7 +519,7 @@ local function div(dividend: vector, divisor: vector): vector
 		end
 	end
 
-	return quotient
+	return quotient, remainder
 end
 
 --[=[
