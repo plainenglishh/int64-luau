@@ -16,17 +16,17 @@ If you wish to contribute to this module, whether it be through optimizations or
 
 ## API
 
-| [Constructors](#constructors)                 | [Destructors](#destructors)               | [Constants](#constants) |
-| :-------------------------------------------- | :---------------------------------------- | :---------------------- |
-| [`from_f64`](#from_f64)                       | [`to_f64`](#to_f64)                       | [`ZERO`](#ZERO)         |
-| [`from_decimal_string`](#from_decimal_string) | [`to_decimal_string`](#to_decimal_string) | [`ONE`](#ONE)           |
-| [`from_pair`](#from_pair)                     | [`to_pair`](#to_pair)                     | [`TWO`](#TWO)           |
-| [`from_u32`](#from_u32)                       | [`to_quartet`](#to_quartet)               | [`MAX`](#MAX)           |
-| [`from_buffer`](#from_buffer)                 | [`to_buffer`](#to_buffer)                 | [`MAX_U32`](#MAX_U32)   |
-| [`from_string`](#from_string)                 | [`write_to_buffer`](#write_to_buffer)     | [`MAX_F64`](#MAX_F64)   |
-|                                               | [`to_string`](#to_string)                 | [`MAX_F32`](#MAX_F32)   |
-|                                               | [`to_hex_string`](#to_hex_string)         |                         |
-|                                               | [`to_bin_string`](#to_bin_string)         |                         |
+| [Constructors](#constructors)           | [Destructors](#destructors)           | [Constants](#constants) |
+| :-------------------------------------- | :------------------------------------ | :---------------------- |
+| [`from_f64`](#from_f64)                 | [`to_f64`](#to_f64)                   | [`ZERO`](#ZERO)         |
+| [`from_dec_string`](#from_dec_string)   | [`to_dec_string`](#to_dec_string)     | [`ONE`](#ONE)           |
+| [`from_pair`](#from_pair)               | [`to_pair`](#to_pair)                 | [`TWO`](#TWO)           |
+| [`from_u32`](#from_u32)                 | [`to_quartet`](#to_quartet)           | [`MAX`](#MAX)           |
+| [`from_buffer`](#from_buffer)           | [`to_buffer`](#to_buffer)             | [`MAX_U32`](#MAX_U32)   |
+| [`from_byte_string`](#from_byte_string) | [`write_to_buffer`](#write_to_buffer) | [`MAX_F64`](#MAX_F64)   |
+|                                         | [`to_byte_string`](#to_byte_string)   | [`MAX_F32`](#MAX_F32)   |
+|                                         | [`to_hex_string`](#to_hex_string)     |                         |
+|                                         | [`to_bin_string`](#to_bin_string)     |                         |
 
 | [Logical](#logical)     | [Arithmetic](#arithmetic) | [Bitwise](#bitwise)     |
 | :---------------------- | :------------------------ | :---------------------- |
@@ -56,10 +56,10 @@ Constructs a 64-bit integer from the passed `f64`. Put more plainly, converts a 
 
 The number is truncated into an integer first. Note that Luau numbers cannot accurately represent integers past `2 ^ 53`.
 
-#### `from_decimal_string`
+#### `from_dec_string`
 
 ```luau
-int64.from_decimal_string(str: string): vector
+int64.from_dec_string(str: string): vector
 ```
 
 Returns the provided value parsed as a 64-bit integer. Expects the provided string to contain only the digits 0-9 and will error if it does not.
@@ -98,10 +98,10 @@ Reads a `u64` from the provided buffer. If offset is provided, reads from that s
 
 This function reads a little-endian value from the buffer.
 
-#### `from_string`
+#### `from_byte_string`
 
 ```luau
-int64.from_string(str: string, offset: number?): vector
+int64.from_byte_string(str: string, offset: number?): vector
 ```
 
 Reads a `u64` from the provided string. If offset is provided, reads from that point in the string. Otherwise starts at the beginning.
@@ -120,10 +120,10 @@ Converts the provided `u64` to an `f64` (or put plainly: a normal Luau number).
 
 This function does not check for precision loss. `f64` values lose precision past `2 ^ 53`.
 
-#### `to_decimal_string`
+#### `to_dec_string`
 
 ```luau
-int64.to_decimal_string(u64: vector): string
+int64.to_dec_string(u64: vector): string
 ```
 
 Returns the provided value as a string of decimal digits.
@@ -170,10 +170,10 @@ Writes the provided `u64` to the provided buffer. The value is written to the bu
 
 The integer is written as a little-endian value.
 
-#### `to_string`
+#### `to_byte_string`
 
 ```luau
-int64.to_string(u64: vector): string
+int64.to_byte_string(u64: vector): string
 ```
 
 Converts the provided `u64` to string of binary data.

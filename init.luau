@@ -577,7 +577,7 @@ end
 
 	This function reads a little-endian value from the string.
 ]=]
-local function from_string(str: string, offset: number?): vector
+local function from_byte_string(str: string, offset: number?): vector
 	offset = offset or 1
 	-- This is deliberately backwards because we expect a little endian input
 	local d, c, b, a, h, g, f, e = string.byte(str, offset, offset :: number + 7)
@@ -619,7 +619,7 @@ end
 
 	The integer is written as if it were little-endian.
 ]=]
-local function to_string(u64: vector): string
+local function to_byte_string(u64: vector): string
 	local most, least = to_pair(u64)
 	-- Previous implementation of this used `%c` but it turns out that
 	-- `string.format("%c", 0)` results in a zero length string!
@@ -666,7 +666,7 @@ end
 	Due to the implementation, the resulting integer will wrap around if it is
 	too large to fit in a 64-bit integer rather than erroring.
 ]=]
-local function from_decimal_string(str: string): vector
+local function from_dec_string(str: string): vector
 	if string.find(str, "%D") then
 		local pos, digit = string.match(str, "()(%D)")
 		local hex = string.format("0x%02x", string.byte(digit :: any))
@@ -696,7 +696,7 @@ end
 	Equivalent to formatting normal numbers with `%u` or
 	calling `tostring` on them.
 ]=]
-local function to_decimal_string(u64: vector): string
+local function to_dec_string(u64: vector): string
 	if countlz(u64) >= 11 then
 		return tostring(to_f64(u64))
 	else
@@ -705,7 +705,7 @@ local function to_decimal_string(u64: vector): string
 		if q_hi == 0 and q_lo < 1e9 then
 			return string.format("%u%09u", q_lo, rem)
 		else
-			return string.format("%s%09u", to_decimal_string(q), rem)
+			return string.format("%s%09u", to_dec_string(q), rem)
 		end
 	end
 end
@@ -770,8 +770,8 @@ return {
 	mod = mod,
 	pow = pow,
 
-	to_string = to_string,
-	from_string = from_string,
+	to_byte_string = to_byte_string,
+	from_byte_string = from_byte_string,
 
 	to_buffer = to_buffer,
 	write_to_buffer = write_to_buffer,
@@ -780,6 +780,6 @@ return {
 	to_hex_string = to_hex_string,
 	to_bin_string = to_bin_string,
 
-	to_decimal_string = to_decimal_string,
-	from_decimal_string = from_decimal_string,
+	to_dec_string = to_dec_string,
+	from_dec_string = from_dec_string,
 }

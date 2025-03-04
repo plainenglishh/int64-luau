@@ -116,50 +116,50 @@ assert(from_f64_8.x == 0, "from_f64(math.pi) x component was wrong")
 assert(from_f64_8.y == 0, "from_f64(math.pi) y component was wrong")
 assert(from_f64_8.z == 3, "from_f64(math.pi) z component was wrong")
 
-local from_string_1_input = "\0\0\0\0\0\0\0\0"
-local from_string_1 = int64.from_string(from_string_1_input)
+local from_byte_string_1_input = "\0\0\0\0\0\0\0\0"
+local from_byte_string_1 = int64.from_byte_string(from_byte_string_1_input)
 assert(
-	int64.from_string(PADDING_STRING .. from_string_1_input, 11) == from_string_1,
-	"offset did not work for from_string_1"
+	int64.from_byte_string(PADDING_STRING .. from_byte_string_1_input, 11) == from_byte_string_1,
+	"offset did not work for from_byte_string_1"
 )
-assert(from_string_1.x == 0, "from_string_1 x component was wrong")
-assert(from_string_1.y == 0, "from_string_1 y component was wrong")
-assert(from_string_1.z == 0, "from_string_1 z component was wrong")
+assert(from_byte_string_1.x == 0, "from_byte_string_1 x component was wrong")
+assert(from_byte_string_1.y == 0, "from_byte_string_1 y component was wrong")
+assert(from_byte_string_1.z == 0, "from_byte_string_1 z component was wrong")
 
-local from_string_2_input = "\x01\0\0\0\0\0\0\0"
-local from_string_2 = int64.from_string(from_string_2_input)
+local from_byte_string_2_input = "\x01\0\0\0\0\0\0\0"
+local from_byte_string_2 = int64.from_byte_string(from_byte_string_2_input)
 assert(
-	int64.from_string(PADDING_STRING .. from_string_2_input, 11) == from_string_2,
-	"offset did not work for from_string_2"
+	int64.from_byte_string(PADDING_STRING .. from_byte_string_2_input, 11) == from_byte_string_2,
+	"offset did not work for from_byte_string_2"
 )
-assert(from_string_2.x == 0, "from_string_2 x component was wrong")
-assert(from_string_2.y == 0, "from_string_2 y component was wrong")
-assert(from_string_2.z == 1, "from_string_2 z component was wrong")
+assert(from_byte_string_2.x == 0, "from_byte_string_2 x component was wrong")
+assert(from_byte_string_2.y == 0, "from_byte_string_2 y component was wrong")
+assert(from_byte_string_2.z == 1, "from_byte_string_2 z component was wrong")
 
-local from_string_3_input = "\x80\x80\x80\x80\x80\x80\x80\x80"
-local from_string_3 = int64.from_string(from_string_3_input)
+local from_byte_string_3_input = "\x80\x80\x80\x80\x80\x80\x80\x80"
+local from_byte_string_3 = int64.from_byte_string(from_byte_string_3_input)
 assert(
-	int64.from_string(PADDING_STRING .. from_string_3_input, 11) == from_string_3,
-	"offset did not work for from_string_3"
+	int64.from_byte_string(PADDING_STRING .. from_byte_string_3_input, 11) == from_byte_string_3,
+	"offset did not work for from_byte_string_3"
 )
-assert(from_string_3.x == 0b1000000010000000100000, "from_string_3 x component was wrong")
-assert(from_string_3.y == 0b00100000001000000010, "from_string_3 y component was wrong")
-assert(from_string_3.z == 0b0000001000000010000000, "from_string_3 z component was wrong")
+assert(from_byte_string_3.x == 0b1000000010000000100000, "from_byte_string_3 x component was wrong")
+assert(from_byte_string_3.y == 0b00100000001000000010, "from_byte_string_3 y component was wrong")
+assert(from_byte_string_3.z == 0b0000001000000010000000, "from_byte_string_3 z component was wrong")
 
-local from_buffer_1 = buffer.fromstring(from_string_1_input)
-local from_buffer_1_offset = buffer.fromstring(PADDING_STRING .. from_string_1_input)
-assert(int64.from_buffer(from_buffer_1) == from_string_1, "from_buffer_1 was not correct")
-assert(int64.from_buffer(from_buffer_1_offset, 10) == from_string_1, "offset did not work for from_buffer_1")
+local from_buffer_1 = buffer.fromstring(from_byte_string_1_input)
+local from_buffer_1_offset = buffer.fromstring(PADDING_STRING .. from_byte_string_1_input)
+assert(int64.from_buffer(from_buffer_1) == from_byte_string_1, "from_buffer_1 was not correct")
+assert(int64.from_buffer(from_buffer_1_offset, 10) == from_byte_string_1, "offset did not work for from_buffer_1")
 
-local from_buffer_2 = buffer.fromstring(from_string_2_input)
-local from_buffer_2_offset = buffer.fromstring(PADDING_STRING .. from_string_2_input)
-assert(int64.from_buffer(from_buffer_2) == from_string_2, "from_buffer_1 was not correct")
-assert(int64.from_buffer(from_buffer_2_offset, 10) == from_string_2, "offset did not work for from_buffer_2")
+local from_buffer_2 = buffer.fromstring(from_byte_string_2_input)
+local from_buffer_2_offset = buffer.fromstring(PADDING_STRING .. from_byte_string_2_input)
+assert(int64.from_buffer(from_buffer_2) == from_byte_string_2, "from_buffer_1 was not correct")
+assert(int64.from_buffer(from_buffer_2_offset, 10) == from_byte_string_2, "offset did not work for from_buffer_2")
 
-local from_buffer_3 = buffer.fromstring(from_string_3_input)
-local from_buffer_3_offset = buffer.fromstring(PADDING_STRING .. from_string_3_input)
-assert(int64.from_buffer(from_buffer_3) == from_string_3, "from_buffer_3 was not correct")
-assert(int64.from_buffer(from_buffer_3_offset, 10) == from_string_3, "offset did not work for from_buffer_3")
+local from_buffer_3 = buffer.fromstring(from_byte_string_3_input)
+local from_buffer_3_offset = buffer.fromstring(PADDING_STRING .. from_byte_string_3_input)
+assert(int64.from_buffer(from_buffer_3) == from_byte_string_3, "from_buffer_3 was not correct")
+assert(int64.from_buffer(from_buffer_3_offset, 10) == from_byte_string_3, "offset did not work for from_buffer_3")
 
 -- Deconstructors
 
@@ -239,46 +239,46 @@ assert(to_f64_8 == 3, "to_f64_8 was not correct")
 
 -- Stringifiers
 
-local to_string_1 = int64.to_string(from_string_1)
-assert(#to_string_1 == 8, "to_string_1 returned a string that is not 8 bytes")
-assert(to_string_1 == from_string_1_input, "to_string_1 is not correct")
+local to_byte_string_1 = int64.to_byte_string(from_byte_string_1)
+assert(#to_byte_string_1 == 8, "to_byte_string_1 returned a string that is not 8 bytes")
+assert(to_byte_string_1 == from_byte_string_1_input, "to_byte_string_1 is not correct")
 
-local to_string_2 = int64.to_string(from_string_2)
-assert(#to_string_2 == 8, "to_string_2 returned a string that is not 8 bytes")
-assert(to_string_2 == from_string_2_input, "to_string_2 is not correct")
+local to_byte_string_2 = int64.to_byte_string(from_byte_string_2)
+assert(#to_byte_string_2 == 8, "to_byte_string_2 returned a string that is not 8 bytes")
+assert(to_byte_string_2 == from_byte_string_2_input, "to_byte_string_2 is not correct")
 
-local to_string_3 = int64.to_string(from_string_3)
-assert(#to_string_3 == 8, "to_string_3 returned a string that is not 8 bytes")
-assert(to_string_3 == from_string_3_input, "to_string_3 is not correct")
+local to_byte_string_3 = int64.to_byte_string(from_byte_string_3)
+assert(#to_byte_string_3 == 8, "to_byte_string_3 returned a string that is not 8 bytes")
+assert(to_byte_string_3 == from_byte_string_3_input, "to_byte_string_3 is not correct")
 
-local to_buffer_1 = int64.to_buffer(from_string_1)
+local to_buffer_1 = int64.to_buffer(from_byte_string_1)
 assert(buffer.len(to_buffer_1) == 8, "to_buffer_1 returned a buffer that is not 8 bytes")
-assert(buffer.tostring(to_buffer_1) == from_string_1_input, "to_buffer_1 is not correct")
+assert(buffer.tostring(to_buffer_1) == from_byte_string_1_input, "to_buffer_1 is not correct")
 
-local to_buffer_2 = int64.to_buffer(from_string_2)
+local to_buffer_2 = int64.to_buffer(from_byte_string_2)
 assert(buffer.len(to_buffer_2) == 8, "to_buffer_2 returned a buffer that is not 8 bytes")
-assert(buffer.tostring(to_buffer_2) == from_string_2_input, "to_buffer_2 is not correct")
+assert(buffer.tostring(to_buffer_2) == from_byte_string_2_input, "to_buffer_2 is not correct")
 
-local to_buffer_3 = int64.to_buffer(from_string_3)
+local to_buffer_3 = int64.to_buffer(from_byte_string_3)
 assert(buffer.len(to_buffer_3) == 8, "to_buffer_3 returned a buffer that is not 8 bytes")
-assert(buffer.tostring(to_buffer_3) == from_string_3_input, "to_buffer_3 is not correct")
+assert(buffer.tostring(to_buffer_3) == from_byte_string_3_input, "to_buffer_3 is not correct")
 
 local write_buffer = buffer.create(16)
 
-int64.write_to_buffer(write_buffer, from_string_1, 0)
-int64.write_to_buffer(write_buffer, from_string_3, 8)
-assert(buffer.readstring(write_buffer, 0, 8) == from_string_1_input, "write_to_buffer 1 was wrong")
-assert(buffer.readstring(write_buffer, 8, 8) == from_string_3_input, "write_to_buffer 1 offset by 8 was wrong")
+int64.write_to_buffer(write_buffer, from_byte_string_1, 0)
+int64.write_to_buffer(write_buffer, from_byte_string_3, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_byte_string_1_input, "write_to_buffer 1 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_byte_string_3_input, "write_to_buffer 1 offset by 8 was wrong")
 
-int64.write_to_buffer(write_buffer, from_string_2, 0)
-int64.write_to_buffer(write_buffer, from_string_2, 8)
-assert(buffer.readstring(write_buffer, 0, 8) == from_string_2_input, "write_to_buffer 2 was wrong")
-assert(buffer.readstring(write_buffer, 8, 8) == from_string_2_input, "write_to_buffer 2 offset by 8 was wrong")
+int64.write_to_buffer(write_buffer, from_byte_string_2, 0)
+int64.write_to_buffer(write_buffer, from_byte_string_2, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_byte_string_2_input, "write_to_buffer 2 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_byte_string_2_input, "write_to_buffer 2 offset by 8 was wrong")
 
-int64.write_to_buffer(write_buffer, from_string_3, 0)
-int64.write_to_buffer(write_buffer, from_string_1, 8)
-assert(buffer.readstring(write_buffer, 0, 8) == from_string_3_input, "write_to_buffer 3 was wrong")
-assert(buffer.readstring(write_buffer, 8, 8) == from_string_1_input, "write_to_buffer 3 offset by 8 was wrong")
+int64.write_to_buffer(write_buffer, from_byte_string_3, 0)
+int64.write_to_buffer(write_buffer, from_byte_string_1, 8)
+assert(buffer.readstring(write_buffer, 0, 8) == from_byte_string_3_input, "write_to_buffer 3 was wrong")
+assert(buffer.readstring(write_buffer, 8, 8) == from_byte_string_1_input, "write_to_buffer 3 offset by 8 was wrong")
 
 local to_hex_string_1 = int64.to_hex_string(from_pair_1)
 assert(to_hex_string_1 == "0000000000000000", "to_hex_string_1 did not return the expected result")
@@ -461,80 +461,78 @@ assert(not int64.is_zero(from_f64_6), "is_zero was wrong for from_f64_6")
 assert(not int64.is_zero(from_f64_7), "is_zero was wrong for from_f64_7")
 assert(not int64.is_zero(from_f64_8), "is_zero was wrong for from_f64_8")
 
-assert(int64.is_zero(from_string_1), "is_zero was wrong for from_string_1")
-assert(not int64.is_zero(from_string_2), "is_zero was wrong for from_string_2")
-assert(not int64.is_zero(from_string_3), "is_zero was wrong for from_string_3")
+assert(int64.is_zero(from_byte_string_1), "is_zero was wrong for from_byte_string_1")
+assert(not int64.is_zero(from_byte_string_2), "is_zero was wrong for from_byte_string_2")
+assert(not int64.is_zero(from_byte_string_3), "is_zero was wrong for from_byte_string_3")
 
--- from_decimal_string
+local from_dec_string_1 = int64.from_dec_string("0")
+assert(int64.to_hex_string(from_dec_string_1) == "0000000000000000", "from_dec_string_1 parsed wrong")
 
-local from_decimal_string_1 = int64.from_decimal_string("0")
-assert(int64.to_hex_string(from_decimal_string_1) == "0000000000000000", "from_decimal_string_1 parsed wrong")
+local from_dec_string_2 = int64.from_dec_string("42")
+assert(int64.to_hex_string(from_dec_string_2) == "000000000000002a", "from_dec_string_2 parsed wrong")
 
-local from_decimal_string_2 = int64.from_decimal_string("42")
-assert(int64.to_hex_string(from_decimal_string_2) == "000000000000002a", "from_decimal_string_2 parsed wrong")
+local from_dec_string_3 = int64.from_dec_string("4294967295")
+assert(int64.to_hex_string(from_dec_string_3) == "00000000ffffffff", "from_dec_string_3 parsed wrong")
 
-local from_decimal_string_3 = int64.from_decimal_string("4294967295")
-assert(int64.to_hex_string(from_decimal_string_3) == "00000000ffffffff", "from_decimal_string_3 parsed wrong")
+local from_dec_string_4 = int64.from_dec_string("4294967296")
+assert(int64.to_hex_string(from_dec_string_4) == "0000000100000000", "from_dec_string_4 parsed wrong")
 
-local from_decimal_string_4 = int64.from_decimal_string("4294967296")
-assert(int64.to_hex_string(from_decimal_string_4) == "0000000100000000", "from_decimal_string_4 parsed wrong")
+local from_dec_string_5 = int64.from_dec_string("9007199254740991")
+assert(int64.to_hex_string(from_dec_string_5) == "001fffffffffffff", "from_dec_string_5 parsed wrong")
 
-local from_decimal_string_5 = int64.from_decimal_string("9007199254740991")
-assert(int64.to_hex_string(from_decimal_string_5) == "001fffffffffffff", "from_decimal_string_5 parsed wrong")
+local from_dec_string_6 = int64.from_dec_string("18446744073709551615")
+assert(int64.to_hex_string(from_dec_string_6) == "ffffffffffffffff", "from_dec_string_6 parsed wrong")
 
-local from_decimal_string_6 = int64.from_decimal_string("18446744073709551615")
-assert(int64.to_hex_string(from_decimal_string_6) == "ffffffffffffffff", "from_decimal_string_6 parsed wrong")
+local from_dec_string_7 = int64.from_dec_string("12345678901234567890")
+assert(int64.to_hex_string(from_dec_string_7) == "ab54a98ceb1f0ad2", "from_dec_string_7 parsed wrong")
 
-local from_decimal_string_7 = int64.from_decimal_string("12345678901234567890")
-assert(int64.to_hex_string(from_decimal_string_7) == "ab54a98ceb1f0ad2", "from_decimal_string_7 parsed wrong")
+local from_dec_string_8 = int64.from_dec_string("18446744073709551557")
+assert(int64.to_hex_string(from_dec_string_8) == "ffffffffffffffc5", "from_dec_string_8 parsed wrong")
 
-local from_decimal_string_8 = int64.from_decimal_string("18446744073709551557")
-assert(int64.to_hex_string(from_decimal_string_8) == "ffffffffffffffc5", "from_decimal_string_8 parsed wrong")
+local from_dec_string_9 = int64.from_dec_string("0000000000000000000001")
+assert(int64.to_hex_string(from_dec_string_9) == "0000000000000001", "from_dec_string_9 parsed wrong")
 
-local from_decimal_string_9 = int64.from_decimal_string("0000000000000000000001")
-assert(int64.to_hex_string(from_decimal_string_9) == "0000000000000001", "from_decimal_string_9 parsed wrong")
+local from_dec_string_10 = int64.from_dec_string("18446744078004518911")
+assert(int64.to_hex_string(from_dec_string_10) == "00000000ffffffff", "from_dec_string_10 parsed wrong")
 
-local from_decimal_string_10 = int64.from_decimal_string("18446744078004518911")
-assert(int64.to_hex_string(from_decimal_string_10) == "00000000ffffffff", "from_decimal_string_10 parsed wrong")
+local to_dec_string_1 = int64.to_dec_string(from_dec_string_1)
+assert(to_dec_string_1 == "0", "to_dec_string was wrong for '0'")
 
-local to_decimal_string_1 = int64.to_decimal_string(from_decimal_string_1)
-assert(to_decimal_string_1 == "0", "to_decimal_string was wrong for '0'")
+local to_dec_string_2 = int64.to_dec_string(from_dec_string_2)
+assert(to_dec_string_2 == "42", "to_dec_string was wrong for '42'")
 
-local to_decimal_string_2 = int64.to_decimal_string(from_decimal_string_2)
-assert(to_decimal_string_2 == "42", "to_decimal_string was wrong for '42'")
+local to_dec_string_3 = int64.to_dec_string(from_dec_string_3)
+assert(to_dec_string_3 == "4294967295", "to_dec_string was wrong for '4294967295'")
 
-local to_decimal_string_3 = int64.to_decimal_string(from_decimal_string_3)
-assert(to_decimal_string_3 == "4294967295", "to_decimal_string was wrong for '4294967295'")
+local to_dec_string_4 = int64.to_dec_string(from_dec_string_4)
+assert(to_dec_string_4 == "4294967296", "to_dec_string was wrong for '4294967296'")
 
-local to_decimal_string_4 = int64.to_decimal_string(from_decimal_string_4)
-assert(to_decimal_string_4 == "4294967296", "to_decimal_string was wrong for '4294967296'")
+local to_dec_string_5 = int64.to_dec_string(from_dec_string_5)
+assert(to_dec_string_5 == "9007199254740991", "to_dec_string was wrong for '9007199254740991'")
 
-local to_decimal_string_5 = int64.to_decimal_string(from_decimal_string_5)
-assert(to_decimal_string_5 == "9007199254740991", "to_decimal_string was wrong for '9007199254740991'")
+local to_dec_string_6 = int64.to_dec_string(from_dec_string_6)
+assert(to_dec_string_6 == "18446744073709551615", "to_dec_string was wrong for '18446744073709551615'")
 
-local to_decimal_string_6 = int64.to_decimal_string(from_decimal_string_6)
-assert(to_decimal_string_6 == "18446744073709551615", "to_decimal_string was wrong for '18446744073709551615'")
+local to_dec_string_7 = int64.to_dec_string(from_dec_string_7)
+assert(to_dec_string_7 == "12345678901234567890", "to_dec_string was wrong for '12345678901234567890'")
 
-local to_decimal_string_7 = int64.to_decimal_string(from_decimal_string_7)
-assert(to_decimal_string_7 == "12345678901234567890", "to_decimal_string was wrong for '12345678901234567890'")
+local to_dec_string_8 = int64.to_dec_string(from_dec_string_8)
+assert(to_dec_string_8 == "18446744073709551557", "to_dec_string was wrong for '18446744073709551557'")
 
-local to_decimal_string_8 = int64.to_decimal_string(from_decimal_string_8)
-assert(to_decimal_string_8 == "18446744073709551557", "to_decimal_string was wrong for '18446744073709551557'")
-
--- from_decimal_string_9 and 10 are testing overflow and leading zeros, which we don't want.
+-- from_dec_string_9 and 10 are testing overflow and leading zeros, which we don't want.
 -- but we do need to test more values above 2 ^ 53
 
-local to_decimal_string_9 = int64.to_decimal_string(int64.from_pair(0xaaaaaaaa, 0xaaaaaaaa))
-assert(to_decimal_string_9 == "12297829382473034410", "to_decimal_string was wrong for '12297829382473034410'")
+local to_dec_string_9 = int64.to_dec_string(int64.from_pair(0xaaaaaaaa, 0xaaaaaaaa))
+assert(to_dec_string_9 == "12297829382473034410", "to_dec_string was wrong for '12297829382473034410'")
 
-local to_decimal_string_10 = int64.to_decimal_string(int64.from_pair(0x55555555, 0x55555555))
-assert(to_decimal_string_10 == "6148914691236517205", "to_decimal_string was wrong for '6148914691236517205'")
+local to_dec_string_10 = int64.to_dec_string(int64.from_pair(0x55555555, 0x55555555))
+assert(to_dec_string_10 == "6148914691236517205", "to_dec_string was wrong for '6148914691236517205'")
 
-local to_decimal_string_11 = int64.to_decimal_string(int64.from_pair(0x00200000, 0x00000000))
-assert(to_decimal_string_11 == "9007199254740992", "to_decimal_string was wrong for '9007199254740992'")
+local to_dec_string_11 = int64.to_dec_string(int64.from_pair(0x00200000, 0x00000000))
+assert(to_dec_string_11 == "9007199254740992", "to_dec_string was wrong for '9007199254740992'")
 
-local to_decimal_string_12 = int64.to_decimal_string(int64.from_pair(0x001fffff, 0xfffffffe))
-assert(to_decimal_string_12 == "9007199254740990", "to_decimal_string was wrong for '9007199254740990'")
+local to_dec_string_12 = int64.to_dec_string(int64.from_pair(0x001fffff, 0xfffffffe))
+assert(to_dec_string_12 == "9007199254740990", "to_dec_string was wrong for '9007199254740990'")
 
 --stylua: ignore
 local two_pows_above_53 = {
@@ -552,20 +550,20 @@ local two_pows_above_53 = {
 
 for i = 0, 63 do
 	local expected = two_pows_above_53[i] or tostring(2 ^ i)
-	local pow_2 = int64.from_decimal_string(expected)
+	local pow_2 = int64.from_dec_string(expected)
 	assert(
 		int64.to_bin_string(pow_2) == string.rep("0", 63 - i) .. "1" .. string.rep("0", i),
-		`from_decimal_string parsed '{expected}' wrong`
+		`from_dec_string parsed '{expected}' wrong`
 	)
-	assert(int64.to_decimal_string(pow_2) == expected, `to_decimal_string was wrong for '{expected}`)
+	assert(int64.to_dec_string(pow_2) == expected, `to_dec_string was wrong for '{expected}`)
 end
 
-assert(int64.to_decimal_string(int64.ZERO) == "0", "to_decimal_string was wrong for ZERO")
-assert(int64.to_decimal_string(int64.ONE) == "1", "to_decimal_string was wrong for ONE")
-assert(int64.to_decimal_string(int64.TWO) == "2", "to_decimal_string was wrong for TWO")
-assert(int64.to_decimal_string(int64.MAX) == "18446744073709551615", "to_decimal_string was wrong for MAX")
-assert(int64.to_decimal_string(int64.MAX_U32) == "4294967295", "to_decimal_string was wrong for MAX_U32")
-assert(int64.to_decimal_string(int64.MAX_F64) == "9007199254740992", "to_decimal_string was wrong for MAX_F64")
-assert(int64.to_decimal_string(int64.MAX_F32) == "16777216", "to_decimal_string was wrong for MAX_F32")
+assert(int64.to_dec_string(int64.ZERO) == "0", "to_dec_string was wrong for ZERO")
+assert(int64.to_dec_string(int64.ONE) == "1", "to_dec_string was wrong for ONE")
+assert(int64.to_dec_string(int64.TWO) == "2", "to_dec_string was wrong for TWO")
+assert(int64.to_dec_string(int64.MAX) == "18446744073709551615", "to_dec_string was wrong for MAX")
+assert(int64.to_dec_string(int64.MAX_U32) == "4294967295", "to_dec_string was wrong for MAX_U32")
+assert(int64.to_dec_string(int64.MAX_F64) == "9007199254740992", "to_dec_string was wrong for MAX_F64")
+assert(int64.to_dec_string(int64.MAX_F32) == "16777216", "to_dec_string was wrong for MAX_F32")
 
 return {}
