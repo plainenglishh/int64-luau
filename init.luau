@@ -523,20 +523,6 @@ local function div(dividend: vector, divisor: vector): (vector, vector)
 end
 
 --[=[
-	Calculates the modulo of the two provided values. Equivalent to `%` for
-	normal integers.
-	
-	This function will error if `divisor` is `0`.
-]=]
-local function mod(dividend: vector, divisor: vector): vector
-	if divisor == ZERO then
-		error("cannot divide integers by 0")
-	end
-
-	return sub(dividend, mult(div(dividend, divisor), divisor))
-end
-
---[=[
 	Calculates the result of `base` raised to `power`. Equivalent to `^` for
 	normal integers. `power` is interpreted as a 32-bit integer.
 
@@ -768,7 +754,6 @@ return {
 	sub = sub,
 	mult = mult,
 	div = div,
-	mod = mod,
 	pow = pow,
 
 	to_byte_string = to_byte_string,

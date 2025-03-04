@@ -34,8 +34,8 @@ If you wish to contribute to this module, whether it be through optimizations or
 | [`gt_equal`](#gt_equal) | [`sub`](#sub)             | [`bor`](#bor)           |
 | [`lt`](#lt)             | [`mult`](#mult)           | [`bxor`](#bxor)         |
 | [`lt_equal`](#lt_equal) | [`div`](#div)             | [`bnot`](#bnot)         |
-|                         | [`mod`](#mod)             | [`lshift`](#lshift)     |
-|                         | [`pow`](#pow)             | [`rshift`](#rshift)     |
+|                         | [`pow`](#pow)             | [`lshift`](#lshift)     |
+|                         |                           | [`rshift`](#rshift)     |
 |                         |                           | [`arshift`](#arshift)   |
 |                         |                           | [`lrotate`](#lrotate)   |
 |                         |                           | [`rrotate`](#rrotate)   |
@@ -305,15 +305,6 @@ int64.div(dividend: vector, divisor: vector): (vector, vector)
 Calculates the quotient of the two provided values and returns it, along with the remainder.
 
 Equivalent to `//` and `%` for normal integers.
-This function will error if `divisor` is `0`.
-
-#### `mod`
-
-```luau
-int64.mod(dividend: vector, divisor: vector): vector
-```
-
-Calculates the modulo of the two provided values. Equivalent to `%` for normal integers.
 This function will error if `divisor` is `0`.
 
 #### `pow`
