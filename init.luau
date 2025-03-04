@@ -653,7 +653,8 @@ end
 	if it were big-endian.
 ]=]
 local function to_bin_string(u64: vector): string
-	-- horrible, inefficent, terrible.
+	-- Manually implemtning a binary conversion is not any faster, and
+	-- this is a lot easier.
 	return (string.gsub(to_hex_string(u64), "(.)", HEX_TO_BINARY))
 end
 
