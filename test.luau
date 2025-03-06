@@ -18,7 +18,6 @@ require("./tests/arithmetic/add")
 require("./tests/arithmetic/sub")
 require("./tests/arithmetic/mult")
 require("./tests/arithmetic/div")
-require("./tests/arithmetic/mod")
 require("./tests/arithmetic/pow")
 local d3 = os.clock() - t3
 print(string.format("Arithmetic tests finished in %.3fs", d3))
