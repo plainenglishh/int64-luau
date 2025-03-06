@@ -1,5 +1,7 @@
 # Int64 Luau
 
+[![Tests](https://github.com/Dekkonot/int64-luau/actions/workflows/test.yml/badge.svg)](https://github.com/Dekkonot/int64-luau/actions/workflows/test.yml)
+
 Implementation of arithmetic and bitwise operations for **unsigned** 64-bit integers in pure Luau. Utilizes `vector` objects to pack the integers efficiently, meaning it avoids expensive table accesses and allocations.
 
 Major features:
