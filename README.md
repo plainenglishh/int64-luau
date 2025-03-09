@@ -2,6 +2,11 @@
 
 [![Tests](https://github.com/Dekkonot/int64-luau/actions/workflows/test.yml/badge.svg)](https://github.com/Dekkonot/int64-luau/actions/workflows/test.yml)
 
+Available on:
+
+-   [Wally](https://wally.run/) as `dekkonot/int64`
+-   [npm](https://www.npmjs.com/) as `@dekkonot/int64`
+
 Implementation of arithmetic and bitwise operations for **unsigned** 64-bit integers in pure Luau. Utilizes `vector` objects to pack the integers efficiently, meaning it avoids expensive table accesses and allocations.
 
 Major features:

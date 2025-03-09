@@ -1,0 +1,15 @@
+[package]
+name = "dekkonot/int64"
+description = "Implementation of unsigned 64-bit integers in pure Luau."
+version = "1.0.0"
+license = "MIT"
+authors = ["Dekkonot"]
+
+registry = "https://github.com/UpliftGames/wally-index"
+repository = "https://github.com/Dekkonot/int64-luau.git"
+
+realm = "shared"
+include = ["init.luau", "README.md", "LICENSE", "wally.toml"]
+exclude = ["*"]
+
+[dependencies]

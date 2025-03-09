@@ -1,0 +1,22 @@
+{
+    "name": "@dekkonot/int64",
+    "version": "1.0.0",
+    "description": "Implementation of unsigned 64-bit integers in pure Luau.",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Dekkonot/int64-luau.git"
+    },
+    "contributors": [
+        "Dekkonot"
+    ],
+    "bugs": {
+        "url": "https://github.com/Dekkonot/luau-hashing/issues"
+    },
+    "files": [
+        "init.luau",
+        "README.md",
+        "LICENSE",
+        "package.json"
+    ]
+}

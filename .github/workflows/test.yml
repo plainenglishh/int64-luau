@@ -13,15 +13,21 @@ jobs:
         steps:
             - uses: actions/checkout@v3
 
-            - name: "Install Luau"
+            - name: "Prepare: Install Luau"
               run: |
                   gh release download --repo Roblox/luau --pattern luau-ubuntu.zip
                   unzip luau-ubuntu.zip
               env:
                   GITHUB_TOKEN: ${{ github.token }}
 
-            - name: "Test"
-              run: ./luau test.luau
+            - name: "Prepare: Install Rokit"
+              uses: CompeyDev/setup-rokit@v0.1.2
 
-            - name: "Test (Codegen)"
+            - name: "Tests: Normal O2"
+              run: ./luau test.luau -O2
+
+            - name: "Tests: Codegen"
               run: ./luau test.luau --codegen
+
+            - name: "Verify: Package manifests"
+              run: lune run verify-package
