@@ -399,7 +399,8 @@ end
 local function add(augend: vector, addend: vector): vector
 	local prime = augend + addend
 
-	prime += vector.create(if prime.y > (2 ^ 20 - 1) then 1 else 0, if prime.z > (2 ^ 22 - 1) then 1 else 0, 0)
+	prime += vector.create(0, if prime.z > (2 ^ 22 - 1) then 1 else 0, 0)
+	prime += vector.create(if prime.y > (2 ^ 20 - 1) then 1 else 0, 0, 0)
 
 	return normalize(prime)
 end

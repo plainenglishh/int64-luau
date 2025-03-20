@@ -2,6 +2,7 @@ local int64 = require("../../init")
 
 local max = int64.from_pair(0xFFFFFFFF, 0xFFFFFFFF)
 local zero = int64.from_u32(0)
+local one = int64.from_u32(1)
 
 local added_max = int64.add(max, max)
 assert(int64.to_hex_string(added_max) == "fffffffffffffffe", "max value + max value was not correct")
@@ -41,5 +42,11 @@ for lhs = 1, 2 ^ 8 do
 		end
 	end
 end
+
+local exact_overflow = int64.add(max, one)
+assert(int64.to_hex_string(exact_overflow) == "0000000000000000", "0xffffffffffffffff + 0x1 was not correct")
+assert(exact_overflow.x == 0x000000, "x component of 0xffffffffffffffff + 0x1 was wrong")
+assert(exact_overflow.y == 0x00000, "x component of 0xffffffffffffffff + 0x1 was wrong")
+assert(exact_overflow.z == 0x000000, "x component of 0xffffffffffffffff + 0x1 was wrong")
 
 return {}
