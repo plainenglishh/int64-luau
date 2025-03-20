@@ -1,6 +1,6 @@
 {
     "name": "@dekkonot/int64",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Implementation of unsigned 64-bit integers in pure Luau.",
     "license": "MIT",
     "repository": {
