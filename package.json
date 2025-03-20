@@ -16,6 +16,7 @@
     "files": [
         "init.luau",
         "README.md",
+        "CHANGELOG.md",
         "LICENSE",
         "package.json"
     ]

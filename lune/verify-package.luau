@@ -23,14 +23,15 @@ assert(npm_license == wally_license, "npm license does not match wally license")
 local function verify_files(files: { string }, manifest_name: string)
 	assert(files[1] == "init.luau", `init.luau was not first in the files list of {manifest_name}`)
 	assert(files[2] == "README.md", `README.md was not second in the files list of {manifest_name}`)
-	assert(files[3] == "LICENSE", `LICENSE was not third in the files list of {manifest_name}`)
-	assert(files[4] == manifest_name, `{manifest_name} was not fourth in the files list of {manifest_name}`)
+	assert(files[3] == "CHANGELOG.md", `CHANGELOG.md was not third in the file list of {manifest_name}`)
+	assert(files[4] == "LICENSE", `LICENSE was not third in the files list of {manifest_name}`)
+	assert(files[5] == manifest_name, `{manifest_name} was not fourth in the files list of {manifest_name}`)
 
 	local count = 0
 	for _ in files do
 		count += 1
 	end
-	assert(count == 4, `{manifest_name} had {count} files in its list instead of 4`)
+	assert(count == 5, `{manifest_name} had {count} files in its list instead of 5`)
 end
 
 verify_files(wally.package.include, "wally.toml")
