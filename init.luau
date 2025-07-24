@@ -628,9 +628,6 @@ end
 	prefix and will error if it does not.
 
 	Leading zeros are accepted and parsed appropriately.
-
-	Due to the implementation, the resulting integer will wrap around if it is
-	too large to fit in a 64-bit integer rather than erroring.
 ]=]
 local function from_hex_string(str: string): vector
 	if string.sub(str, 1, 2) == "0x" then

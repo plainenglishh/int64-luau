@@ -125,8 +125,6 @@ Converts the provided hexadecimal string into a 64-bit integer. Expects the prov
 
 Leading zeros are accepted and parsed appropriately.
 
-Due to the implementation, the resulting integer will wrap around if it is too large to fit in a 64-bit integer rather than erroring.
-
 ### Destructors
 
 #### `to_f64`
