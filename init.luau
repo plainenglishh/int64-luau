@@ -623,6 +623,36 @@ local function to_byte_string(u64: vector): string
 end
 
 --[=[
+	Converts the provided hexadecimal string into a 64-bit integer. Expects the
+	provided string to contain only hexadecimal digits and an optional `0x`
+	prefix and will error if it does not.
+
+	Leading zeros are accepted and parsed appropriately.
+
+	Due to the implementation, the resulting integer will wrap around if it is
+	too large to fit in a 64-bit integer rather than erroring.
+]=]
+local function from_hex_string(str: string): vector
+	if string.sub(str, 1, 2) == "0x" then
+		str = string.sub(str, 3);
+	end
+
+	str = string.gsub(str, "^(0*)", "")
+	str = string.rep("0", 16 - #str) .. str
+
+	if string.find(str, "%X") then
+		local pos, digit = string.match(str, "()(%D)")
+		local hex = string.format("0x%02x", string.byte(digit :: any))
+		error(`unexpected character '{digit}' ({hex}) at position {pos} while parsing hexadecimal string`)
+	end
+
+	local most = tonumber(string.sub(str, 1, 8), 16) or error("unreachable")
+	local least = tonumber(string.sub(str, 9, 16), 16) or error("unreachable")
+
+	return from_pair(most, least)
+end
+
+--[=[
 	Converts the provided `u64` to a string of 16 hexadecimal digits.
 
 	The returned string will always be 16 bytes and the number is formatted as
@@ -640,7 +670,7 @@ end
 	if it were big-endian.
 ]=]
 local function to_bin_string(u64: vector): string
-	-- Manually implemtning a binary conversion is not any faster, and
+	-- Manually implementing a binary conversion is not any faster, and
 	-- this is a lot easier.
 	return (string.gsub(to_hex_string(u64), "(.)", HEX_TO_BINARY))
 end
@@ -701,7 +731,7 @@ end
 -- TODO: replace and extract
 -- TODO: vararg versions of band, bor, bxor
 
-return {
+local int64 = {
 	--- A constant representing the 64-bit representation of `0`.
 	ZERO = ZERO,
 	--- A constant representating the 64-bit representation of `1`.
@@ -765,8 +795,12 @@ return {
 	from_buffer = from_buffer,
 
 	to_hex_string = to_hex_string,
+	from_hex_string = from_hex_string,
+
 	to_bin_string = to_bin_string,
 
 	to_dec_string = to_dec_string,
 	from_dec_string = from_dec_string,
 }
+
+return table.freeze(int64)

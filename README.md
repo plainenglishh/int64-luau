@@ -31,7 +31,7 @@ If you wish to contribute to this module, whether it be through optimizations or
 | [`from_u32`](#from_u32)                 | [`to_quartet`](#to_quartet)           | [`MAX`](#MAX)           |
 | [`from_buffer`](#from_buffer)           | [`to_buffer`](#to_buffer)             | [`MAX_U32`](#MAX_U32)   |
 | [`from_byte_string`](#from_byte_string) | [`write_to_buffer`](#write_to_buffer) | [`MAX_F64`](#MAX_F64)   |
-|                                         | [`to_byte_string`](#to_byte_string)   | [`MAX_F32`](#MAX_F32)   |
+| [`from_hex_string`](#from_hex_string)   | [`to_byte_string`](#to_byte_string)   | [`MAX_F32`](#MAX_F32)   |
 |                                         | [`to_hex_string`](#to_hex_string)     |                         |
 |                                         | [`to_bin_string`](#to_bin_string)     |                         |
 
@@ -114,6 +114,18 @@ int64.from_byte_string(str: string, offset: number?): vector
 Reads a `u64` from the provided string. If offset is provided, reads from that point in the string. Otherwise starts at the beginning.
 
 This function reads a little-endian value from the string.
+
+#### `from_hex_string`
+
+```luau
+int64.from_hex_string(str: string, offset: number?): vector
+```
+
+Converts the provided hexadecimal string into a 64-bit integer. Expects the provided string to contain only hexadecimal digits and an optional `0x` prefix and will error if it does not.
+
+Leading zeros are accepted and parsed appropriately.
+
+Due to the implementation, the resulting integer will wrap around if it is too large to fit in a 64-bit integer rather than erroring.
 
 ### Destructors
 

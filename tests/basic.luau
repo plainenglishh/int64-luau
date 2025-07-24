@@ -295,6 +295,21 @@ assert(to_hex_string_4 == "deadbeef98765432", "to_hex_string_4 did not return th
 local to_hex_string_5 = int64.to_hex_string(from_pair_5)
 assert(to_hex_string_5 == "0000000000000000", "to_hex_string_5 did not return the expected result")
 
+local from_hex_string_1 = int64.from_hex_string("0000000000000000")
+assert(from_hex_string_1 == from_pair_1, "from_hex_string did not return the expected result")
+
+local from_hex_string_2 = int64.from_hex_string("000000000000000a")
+assert(from_hex_string_2 == from_pair_2, "from_hex_string did not return the expected result")
+
+local from_hex_string_3 = int64.from_hex_string("ffffffffffffffff")
+assert(from_hex_string_3 == from_pair_3, "from_hex_string did not return the expected result")
+
+local from_hex_string_4 = int64.from_hex_string("deadbeef98765432")
+assert(from_hex_string_4 == from_pair_4, "from_hex_string did not return the expected result")
+
+local from_hex_string_5 = int64.from_hex_string("0000000000000000")
+assert(from_hex_string_5 == from_pair_5, "from_hex_string did not return the expected result")
+
 local to_bin_string_1 = int64.to_bin_string(from_pair_1)
 assert(
 	to_bin_string_1 == "0000000000000000000000000000000000000000000000000000000000000000",
